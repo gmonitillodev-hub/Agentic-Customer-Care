@@ -1,0 +1,18 @@
+[project]
+name = "agentic-customer-care"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Giuseppe Monitillo",email = "Giuseppe.Monitillo@ext.luxottica.com"}
+]
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+]
+
+[tool.poetry]
+packages = [{include = "agentic_customer_care", from = "src"}]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
