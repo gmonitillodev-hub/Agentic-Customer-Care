@@ -1,0 +1,811 @@
+{
+    "store": "GreenThumb Marketplace",
+    "currency": "EUR",
+    "generated": "2026-10-15",
+    "orders": [
+        {
+            "order_id": "ORD-001",
+            "customer_name": "Marco Bianchi",
+            "customer_email": "marco.bianchi@email.it",
+            "status": "delivered",
+            "items": [
+                {
+                    "product_id": "PROD-001",
+                    "name": "Organic Tomato Seeds",
+                    "quantity": 2,
+                    "unit_price": 3.49
+                },
+                {
+                    "product_id": "PROD-023",
+                    "name": "Universal Potting Soil 50L",
+                    "quantity": 1,
+                    "unit_price": 12.99
+                },
+                {
+                    "product_id": "PROD-030",
+                    "name": "Tomato & Vegetable Fertilizer 1L",
+                    "quantity": 2,
+                    "unit_price": 7.99
+                }
+            ],
+            "total": 35.96,
+            "order_date": "2026-06-03",
+            "shipping_address": "Via Roma 42, 20121 Milano, MI, Italia",
+            "tracking_number": "TRK-4829173650"
+        },
+        {
+            "order_id": "ORD-002",
+            "customer_name": "Giulia Rossi",
+            "customer_email": "giulia.rossi@email.it",
+            "status": "delivered",
+            "items": [
+                {
+                    "product_id": "PROD-007",
+                    "name": "Dutch Tulip Bulbs (x10)",
+                    "quantity": 2,
+                    "unit_price": 8.99
+                },
+                {
+                    "product_id": "PROD-008",
+                    "name": "Daffodil Bulbs (x12)",
+                    "quantity": 1,
+                    "unit_price": 7.49
+                }
+            ],
+            "total": 25.47,
+            "order_date": "2026-06-10",
+            "shipping_address": "Corso Vittorio Emanuele 15, 00186 Roma, RM, Italia",
+            "tracking_number": "TRK-5738291046"
+        },
+        {
+            "order_id": "ORD-003",
+            "customer_name": "Alessandro Conti",
+            "customer_email": "alessandro.conti@email.it",
+            "status": "delivered",
+            "items": [
+                {
+                    "product_id": "PROD-013",
+                    "name": "Stainless Steel Garden Spade",
+                    "quantity": 1,
+                    "unit_price": 34.99
+                },
+                {
+                    "product_id": "PROD-016",
+                    "name": "Professional Gardening Gloves",
+                    "quantity": 2,
+                    "unit_price": 12.99
+                },
+                {
+                    "product_id": "PROD-012",
+                    "name": "Bypass Pruning Shears",
+                    "quantity": 1,
+                    "unit_price": 18.99
+                }
+            ],
+            "total": 79.96,
+            "order_date": "2026-06-18",
+            "shipping_address": "Via Dante Alighieri 8, 50122 Firenze, FI, Italia",
+            "tracking_number": "TRK-6192847305"
+        },
+        {
+            "order_id": "ORD-004",
+            "customer_name": "Francesca De Luca",
+            "customer_email": "francesca.deluca@email.it",
+            "status": "delivered",
+            "items": [
+                {
+                    "product_id": "PROD-021",
+                    "name": "Wooden Raised Bed Kit 120x80cm",
+                    "quantity": 1,
+                    "unit_price": 54.99
+                },
+                {
+                    "product_id": "PROD-026",
+                    "name": "Seed Starting Mix 20L",
+                    "quantity": 2,
+                    "unit_price": 9.49
+                },
+                {
+                    "product_id": "PROD-022",
+                    "name": "Seed Starting Tray (72 cells)",
+                    "quantity": 3,
+                    "unit_price": 4.99
+                }
+            ],
+            "total": 88.94,
+            "order_date": "2026-07-02",
+            "shipping_address": "Via Toledo 78, 80134 Napoli, NA, Italia",
+            "tracking_number": "TRK-7381920465"
+        },
+        {
+            "order_id": "ORD-005",
+            "customer_name": "Luca Moretti",
+            "customer_email": "luca.moretti@email.it",
+            "status": "delivered",
+            "items": [
+                {
+                    "product_id": "PROD-005",
+                    "name": "Lavender Seed Mix",
+                    "quantity": 3,
+                    "unit_price": 3.79
+                },
+                {
+                    "product_id": "PROD-019",
+                    "name": "Glazed Ceramic Planter 25cm",
+                    "quantity": 2,
+                    "unit_price": 18.99
+                }
+            ],
+            "total": 49.35,
+            "order_date": "2026-07-11",
+            "shipping_address": "Via Garibaldi 23, 10122 Torino, TO, Italia",
+            "tracking_number": "TRK-8204719365"
+        },
+        {
+            "order_id": "ORD-006",
+            "customer_name": "Sofia Martinelli",
+            "customer_email": "sofia.martinelli@email.it",
+            "status": "delivered",
+            "items": [
+                {
+                    "product_id": "PROD-018",
+                    "name": "Classic Terracotta Pot 30cm",
+                    "quantity": 3,
+                    "unit_price": 9.99
+                },
+                {
+                    "product_id": "PROD-002",
+                    "name": "Sweet Basil Seed Pack",
+                    "quantity": 2,
+                    "unit_price": 2.29
+                },
+                {
+                    "product_id": "PROD-004",
+                    "name": "Hot Chili Pepper Seeds",
+                    "quantity": 1,
+                    "unit_price": 3.29
+                },
+                {
+                    "product_id": "PROD-027",
+                    "name": "Organic Universal Fertilizer 5kg",
+                    "quantity": 1,
+                    "unit_price": 16.99
+                }
+            ],
+            "total": 54.84,
+            "order_date": "2026-07-20",
+            "shipping_address": "Via Mazzini 56, 37121 Verona, VR, Italia",
+            "tracking_number": "TRK-9317284056"
+        },
+        {
+            "order_id": "ORD-007",
+            "customer_name": "Marco Bianchi",
+            "customer_email": "marco.bianchi@email.it",
+            "status": "delivered",
+            "items": [
+                {
+                    "product_id": "PROD-015",
+                    "name": "Galvanized Watering Can 10L",
+                    "quantity": 1,
+                    "unit_price": 24.99
+                },
+                {
+                    "product_id": "PROD-017",
+                    "name": "Ergonomic Hand Trowel",
+                    "quantity": 1,
+                    "unit_price": 8.99
+                }
+            ],
+            "total": 33.98,
+            "order_date": "2026-08-01",
+            "shipping_address": "Via Roma 42, 20121 Milano, MI, Italia",
+            "tracking_number": "TRK-1048273916"
+        },
+        {
+            "order_id": "ORD-008",
+            "customer_name": "Elena Ferraro",
+            "customer_email": "elena.ferraro@email.it",
+            "status": "delivered",
+            "items": [
+                {
+                    "product_id": "PROD-011",
+                    "name": "Allium Giganteum Bulbs (x5)",
+                    "quantity": 1,
+                    "unit_price": 12.99
+                },
+                {
+                    "product_id": "PROD-010",
+                    "name": "Hyacinth Bulbs (x6)",
+                    "quantity": 2,
+                    "unit_price": 9.99
+                },
+                {
+                    "product_id": "PROD-009",
+                    "name": "Crocus Bulbs (x15)",
+                    "quantity": 1,
+                    "unit_price": 5.49
+                }
+            ],
+            "total": 38.46,
+            "order_date": "2026-08-05",
+            "shipping_address": "Via San Gregorio Armeno 12, 80138 Napoli, NA, Italia",
+            "tracking_number": "TRK-2159384706"
+        },
+        {
+            "order_id": "ORD-009",
+            "customer_name": "Roberto Colombo",
+            "customer_email": "roberto.colombo@email.it",
+            "status": "delivered",
+            "items": [
+                {
+                    "product_id": "PROD-029",
+                    "name": "Lawn Feed Fertilizer 10kg",
+                    "quantity": 2,
+                    "unit_price": 22.99
+                }
+            ],
+            "total": 45.98,
+            "order_date": "2026-08-14",
+            "shipping_address": "Viale della Libertà 90, 90143 Palermo, PA, Italia",
+            "tracking_number": "TRK-3260491857"
+        },
+        {
+            "order_id": "ORD-010",
+            "customer_name": "Chiara Gentile",
+            "customer_email": "chiara.gentile@email.it",
+            "status": "delivered",
+            "items": [
+                {
+                    "product_id": "PROD-003",
+                    "name": "Giant Sunflower Seeds",
+                    "quantity": 2,
+                    "unit_price": 3.99
+                },
+                {
+                    "product_id": "PROD-006",
+                    "name": "Rainbow Carrot Seeds",
+                    "quantity": 3,
+                    "unit_price": 2.99
+                },
+                {
+                    "product_id": "PROD-026",
+                    "name": "Seed Starting Mix 20L",
+                    "quantity": 1,
+                    "unit_price": 9.49
+                }
+            ],
+            "total": 26.44,
+            "order_date": "2026-08-22",
+            "shipping_address": "Corso Italia 33, 56125 Pisa, PI, Italia",
+            "tracking_number": "TRK-4371502968"
+        },
+        {
+            "order_id": "ORD-011",
+            "customer_name": "Giulia Rossi",
+            "customer_email": "giulia.rossi@email.it",
+            "status": "shipped",
+            "items": [
+                {
+                    "product_id": "PROD-020",
+                    "name": "Hanging Basket with Coconut Liner",
+                    "quantity": 2,
+                    "unit_price": 14.99
+                },
+                {
+                    "product_id": "PROD-005",
+                    "name": "Lavender Seed Mix",
+                    "quantity": 1,
+                    "unit_price": 3.79
+                }
+            ],
+            "total": 33.77,
+            "order_date": "2026-09-01",
+            "shipping_address": "Corso Vittorio Emanuele 15, 00186 Roma, RM, Italia",
+            "tracking_number": "TRK-5482613079"
+        },
+        {
+            "order_id": "ORD-012",
+            "customer_name": "Davide Rinaldi",
+            "customer_email": "davide.rinaldi@email.it",
+            "status": "shipped",
+            "items": [
+                {
+                    "product_id": "PROD-013",
+                    "name": "Stainless Steel Garden Spade",
+                    "quantity": 1,
+                    "unit_price": 34.99
+                },
+                {
+                    "product_id": "PROD-014",
+                    "name": "Adjustable Garden Rake",
+                    "quantity": 1,
+                    "unit_price": 22.99
+                },
+                {
+                    "product_id": "PROD-016",
+                    "name": "Professional Gardening Gloves",
+                    "quantity": 1,
+                    "unit_price": 12.99
+                },
+                {
+                    "product_id": "PROD-015",
+                    "name": "Galvanized Watering Can 10L",
+                    "quantity": 1,
+                    "unit_price": 24.99
+                }
+            ],
+            "total": 95.96,
+            "order_date": "2026-09-03",
+            "shipping_address": "Via Indipendenza 27, 40121 Bologna, BO, Italia",
+            "tracking_number": "TRK-6593724180"
+        },
+        {
+            "order_id": "ORD-013",
+            "customer_name": "Valentina Greco",
+            "customer_email": "valentina.greco@email.it",
+            "status": "shipped",
+            "items": [
+                {
+                    "product_id": "PROD-024",
+                    "name": "Cactus & Succulent Mix 10L",
+                    "quantity": 2,
+                    "unit_price": 8.99
+                },
+                {
+                    "product_id": "PROD-019",
+                    "name": "Glazed Ceramic Planter 25cm",
+                    "quantity": 1,
+                    "unit_price": 18.99
+                }
+            ],
+            "total": 36.97,
+            "order_date": "2026-09-07",
+            "shipping_address": "Via Etnea 145, 95131 Catania, CT, Italia",
+            "tracking_number": "TRK-7604835291"
+        },
+        {
+            "order_id": "ORD-014",
+            "customer_name": "Matteo Lombardi",
+            "customer_email": "matteo.lombardi@email.it",
+            "status": "shipped",
+            "items": [
+                {
+                    "product_id": "PROD-028",
+                    "name": "Rose & Flower Fertilizer 1kg",
+                    "quantity": 1,
+                    "unit_price": 9.99
+                },
+                {
+                    "product_id": "PROD-007",
+                    "name": "Dutch Tulip Bulbs (x10)",
+                    "quantity": 3,
+                    "unit_price": 8.99
+                },
+                {
+                    "product_id": "PROD-025",
+                    "name": "Orchid Bark Substrate 5L",
+                    "quantity": 2,
+                    "unit_price": 6.49
+                }
+            ],
+            "total": 49.94,
+            "order_date": "2026-09-10",
+            "shipping_address": "Via XX Settembre 35, 16121 Genova, GE, Italia",
+            "tracking_number": "TRK-8715946302"
+        },
+        {
+            "order_id": "ORD-015",
+            "customer_name": "Francesca De Luca",
+            "customer_email": "francesca.deluca@email.it",
+            "status": "shipped",
+            "items": [
+                {
+                    "product_id": "PROD-027",
+                    "name": "Organic Universal Fertilizer 5kg",
+                    "quantity": 2,
+                    "unit_price": 16.99
+                },
+                {
+                    "product_id": "PROD-023",
+                    "name": "Universal Potting Soil 50L",
+                    "quantity": 3,
+                    "unit_price": 12.99
+                }
+            ],
+            "total": 72.95,
+            "order_date": "2026-09-15",
+            "shipping_address": "Via Toledo 78, 80134 Napoli, NA, Italia",
+            "tracking_number": "TRK-9826057413"
+        },
+        {
+            "order_id": "ORD-016",
+            "customer_name": "Alessandro Conti",
+            "customer_email": "alessandro.conti@email.it",
+            "status": "shipped",
+            "items": [
+                {
+                    "product_id": "PROD-021",
+                    "name": "Wooden Raised Bed Kit 120x80cm",
+                    "quantity": 2,
+                    "unit_price": 54.99
+                }
+            ],
+            "total": 109.98,
+            "order_date": "2026-09-18",
+            "shipping_address": "Via Dante Alighieri 8, 50122 Firenze, FI, Italia",
+            "tracking_number": "TRK-1937168524"
+        },
+        {
+            "order_id": "ORD-017",
+            "customer_name": "Luca Moretti",
+            "customer_email": "luca.moretti@email.it",
+            "status": "shipped",
+            "items": [
+                {
+                    "product_id": "PROD-012",
+                    "name": "Bypass Pruning Shears",
+                    "quantity": 1,
+                    "unit_price": 18.99
+                },
+                {
+                    "product_id": "PROD-017",
+                    "name": "Ergonomic Hand Trowel",
+                    "quantity": 2,
+                    "unit_price": 8.99
+                },
+                {
+                    "product_id": "PROD-001",
+                    "name": "Organic Tomato Seeds",
+                    "quantity": 3,
+                    "unit_price": 3.49
+                }
+            ],
+            "total": 47.44,
+            "order_date": "2026-09-22",
+            "shipping_address": "Via Garibaldi 23, 10122 Torino, TO, Italia",
+            "tracking_number": "TRK-2048279635"
+        },
+        {
+            "order_id": "ORD-018",
+            "customer_name": "Sara Pellegrini",
+            "customer_email": "sara.pellegrini@email.it",
+            "status": "processing",
+            "items": [
+                {
+                    "product_id": "PROD-010",
+                    "name": "Hyacinth Bulbs (x6)",
+                    "quantity": 1,
+                    "unit_price": 9.99
+                },
+                {
+                    "product_id": "PROD-009",
+                    "name": "Crocus Bulbs (x15)",
+                    "quantity": 2,
+                    "unit_price": 5.49
+                },
+                {
+                    "product_id": "PROD-008",
+                    "name": "Daffodil Bulbs (x12)",
+                    "quantity": 1,
+                    "unit_price": 7.49
+                }
+            ],
+            "total": 28.46,
+            "order_date": "2026-10-01",
+            "shipping_address": "Piazza delle Erbe 5, 35122 Padova, PD, Italia",
+            "tracking_number": null
+        },
+        {
+            "order_id": "ORD-019",
+            "customer_name": "Roberto Colombo",
+            "customer_email": "roberto.colombo@email.it",
+            "status": "processing",
+            "items": [
+                {
+                    "product_id": "PROD-011",
+                    "name": "Allium Giganteum Bulbs (x5)",
+                    "quantity": 2,
+                    "unit_price": 12.99
+                },
+                {
+                    "product_id": "PROD-018",
+                    "name": "Classic Terracotta Pot 30cm",
+                    "quantity": 1,
+                    "unit_price": 9.99
+                }
+            ],
+            "total": 35.97,
+            "order_date": "2026-10-03",
+            "shipping_address": "Viale della Libertà 90, 90143 Palermo, PA, Italia",
+            "tracking_number": null
+        },
+        {
+            "order_id": "ORD-020",
+            "customer_name": "Andrea Vitale",
+            "customer_email": "andrea.vitale@email.it",
+            "status": "processing",
+            "items": [
+                {
+                    "product_id": "PROD-003",
+                    "name": "Giant Sunflower Seeds",
+                    "quantity": 1,
+                    "unit_price": 3.99
+                },
+                {
+                    "product_id": "PROD-002",
+                    "name": "Sweet Basil Seed Pack",
+                    "quantity": 3,
+                    "unit_price": 2.29
+                },
+                {
+                    "product_id": "PROD-022",
+                    "name": "Seed Starting Tray (72 cells)",
+                    "quantity": 2,
+                    "unit_price": 4.99
+                },
+                {
+                    "product_id": "PROD-026",
+                    "name": "Seed Starting Mix 20L",
+                    "quantity": 1,
+                    "unit_price": 9.49
+                }
+            ],
+            "total": 30.33,
+            "order_date": "2026-10-05",
+            "shipping_address": "Via Sparano 104, 70121 Bari, BA, Italia",
+            "tracking_number": null
+        },
+        {
+            "order_id": "ORD-021",
+            "customer_name": "Sofia Martinelli",
+            "customer_email": "sofia.martinelli@email.it",
+            "status": "processing",
+            "items": [
+                {
+                    "product_id": "PROD-014",
+                    "name": "Adjustable Garden Rake",
+                    "quantity": 1,
+                    "unit_price": 22.99
+                },
+                {
+                    "product_id": "PROD-016",
+                    "name": "Professional Gardening Gloves",
+                    "quantity": 2,
+                    "unit_price": 12.99
+                }
+            ],
+            "total": 48.97,
+            "order_date": "2026-10-08",
+            "shipping_address": "Via Mazzini 56, 37121 Verona, VR, Italia",
+            "tracking_number": null
+        },
+        {
+            "order_id": "ORD-022",
+            "customer_name": "Chiara Gentile",
+            "customer_email": "chiara.gentile@email.it",
+            "status": "processing",
+            "items": [
+                {
+                    "product_id": "PROD-020",
+                    "name": "Hanging Basket with Coconut Liner",
+                    "quantity": 3,
+                    "unit_price": 14.99
+                },
+                {
+                    "product_id": "PROD-025",
+                    "name": "Orchid Bark Substrate 5L",
+                    "quantity": 1,
+                    "unit_price": 6.49
+                }
+            ],
+            "total": 51.46,
+            "order_date": "2026-10-10",
+            "shipping_address": "Corso Italia 33, 56125 Pisa, PI, Italia",
+            "tracking_number": null
+        },
+        {
+            "order_id": "ORD-023",
+            "customer_name": "Elena Ferraro",
+            "customer_email": "elena.ferraro@email.it",
+            "status": "processing",
+            "items": [
+                {
+                    "product_id": "PROD-030",
+                    "name": "Tomato & Vegetable Fertilizer 1L",
+                    "quantity": 3,
+                    "unit_price": 7.99
+                },
+                {
+                    "product_id": "PROD-004",
+                    "name": "Hot Chili Pepper Seeds",
+                    "quantity": 2,
+                    "unit_price": 3.29
+                },
+                {
+                    "product_id": "PROD-006",
+                    "name": "Rainbow Carrot Seeds",
+                    "quantity": 1,
+                    "unit_price": 2.99
+                }
+            ],
+            "total": 33.54,
+            "order_date": "2026-10-12",
+            "shipping_address": "Via San Gregorio Armeno 12, 80138 Napoli, NA, Italia",
+            "tracking_number": null
+        },
+        {
+            "order_id": "ORD-024",
+            "customer_name": "Davide Rinaldi",
+            "customer_email": "davide.rinaldi@email.it",
+            "status": "cancelled",
+            "items": [
+                {
+                    "product_id": "PROD-021",
+                    "name": "Wooden Raised Bed Kit 120x80cm",
+                    "quantity": 1,
+                    "unit_price": 54.99
+                },
+                {
+                    "product_id": "PROD-023",
+                    "name": "Universal Potting Soil 50L",
+                    "quantity": 2,
+                    "unit_price": 12.99
+                }
+            ],
+            "total": 80.97,
+            "order_date": "2026-06-25",
+            "shipping_address": "Via Indipendenza 27, 40121 Bologna, BO, Italia",
+            "tracking_number": null
+        },
+        {
+            "order_id": "ORD-025",
+            "customer_name": "Valentina Greco",
+            "customer_email": "valentina.greco@email.it",
+            "status": "cancelled",
+            "items": [
+                {
+                    "product_id": "PROD-013",
+                    "name": "Stainless Steel Garden Spade",
+                    "quantity": 1,
+                    "unit_price": 34.99
+                }
+            ],
+            "total": 34.99,
+            "order_date": "2026-07-15",
+            "shipping_address": "Via Etnea 145, 95131 Catania, CT, Italia",
+            "tracking_number": null
+        },
+        {
+            "order_id": "ORD-026",
+            "customer_name": "Matteo Lombardi",
+            "customer_email": "matteo.lombardi@email.it",
+            "status": "cancelled",
+            "items": [
+                {
+                    "product_id": "PROD-029",
+                    "name": "Lawn Feed Fertilizer 10kg",
+                    "quantity": 1,
+                    "unit_price": 22.99
+                },
+                {
+                    "product_id": "PROD-015",
+                    "name": "Galvanized Watering Can 10L",
+                    "quantity": 1,
+                    "unit_price": 24.99
+                },
+                {
+                    "product_id": "PROD-012",
+                    "name": "Bypass Pruning Shears",
+                    "quantity": 2,
+                    "unit_price": 18.99
+                }
+            ],
+            "total": 85.96,
+            "order_date": "2026-08-20",
+            "shipping_address": "Via XX Settembre 35, 16121 Genova, GE, Italia",
+            "tracking_number": null
+        },
+        {
+            "order_id": "ORD-027",
+            "customer_name": "Andrea Vitale",
+            "customer_email": "andrea.vitale@email.it",
+            "status": "cancelled",
+            "items": [
+                {
+                    "product_id": "PROD-007",
+                    "name": "Dutch Tulip Bulbs (x10)",
+                    "quantity": 1,
+                    "unit_price": 8.99
+                },
+                {
+                    "product_id": "PROD-010",
+                    "name": "Hyacinth Bulbs (x6)",
+                    "quantity": 1,
+                    "unit_price": 9.99
+                }
+            ],
+            "total": 18.98,
+            "order_date": "2026-09-28",
+            "shipping_address": "Via Sparano 104, 70121 Bari, BA, Italia",
+            "tracking_number": null
+        },
+        {
+            "order_id": "ORD-028",
+            "customer_name": "Sara Pellegrini",
+            "customer_email": "sara.pellegrini@email.it",
+            "status": "refunded",
+            "items": [
+                {
+                    "product_id": "PROD-019",
+                    "name": "Glazed Ceramic Planter 25cm",
+                    "quantity": 3,
+                    "unit_price": 18.99
+                },
+                {
+                    "product_id": "PROD-024",
+                    "name": "Cactus & Succulent Mix 10L",
+                    "quantity": 1,
+                    "unit_price": 8.99
+                }
+            ],
+            "total": 65.96,
+            "order_date": "2026-07-08",
+            "shipping_address": "Piazza delle Erbe 5, 35122 Padova, PD, Italia",
+            "tracking_number": null
+        },
+        {
+            "order_id": "ORD-029",
+            "customer_name": "Marco Bianchi",
+            "customer_email": "marco.bianchi@email.it",
+            "status": "refunded",
+            "items": [
+                {
+                    "product_id": "PROD-014",
+                    "name": "Adjustable Garden Rake",
+                    "quantity": 1,
+                    "unit_price": 22.99
+                },
+                {
+                    "product_id": "PROD-017",
+                    "name": "Ergonomic Hand Trowel",
+                    "quantity": 1,
+                    "unit_price": 8.99
+                }
+            ],
+            "total": 31.98,
+            "order_date": "2026-07-25",
+            "shipping_address": "Via Roma 42, 20121 Milano, MI, Italia",
+            "tracking_number": null
+        },
+        {
+            "order_id": "ORD-030",
+            "customer_name": "Giulia Rossi",
+            "customer_email": "giulia.rossi@email.it",
+            "status": "refunded",
+            "items": [
+                {
+                    "product_id": "PROD-028",
+                    "name": "Rose & Flower Fertilizer 1kg",
+                    "quantity": 2,
+                    "unit_price": 9.99
+                },
+                {
+                    "product_id": "PROD-005",
+                    "name": "Lavender Seed Mix",
+                    "quantity": 1,
+                    "unit_price": 3.79
+                },
+                {
+                    "product_id": "PROD-018",
+                    "name": "Classic Terracotta Pot 30cm",
+                    "quantity": 1,
+                    "unit_price": 9.99
+                }
+            ],
+            "total": 33.76,
+            "order_date": "2026-08-10",
+            "shipping_address": "Corso Vittorio Emanuele 15, 00186 Roma, RM, Italia",
+            "tracking_number": null
+        }
+    ]
+}

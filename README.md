@@ -1,4 +1,4 @@
-# Agentic Customer Care
+# 🤖 Agentic Customer Care
 
 **AI-powered customer care agent for GreenThumb Marketplace — faster answers, happier gardeners.**
 

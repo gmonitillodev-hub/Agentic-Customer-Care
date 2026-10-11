@@ -1,0 +1,548 @@
+{
+    "products": [
+        {
+            "id": "PROD-001",
+            "name": "Organic Tomato Seeds",
+            "category": "seeds",
+            "price": 3.49,
+            "currency": "EUR",
+            "stock": 245,
+            "description": "Certified organic tomato seeds producing juicy, flavorful fruits perfect for salads and sauces. Each packet contains approximately 50 seeds with a high germination rate.",
+            "tags": [
+                "seeds",
+                "organic",
+                "vegetable",
+                "spring",
+                "summer",
+                "tomato",
+                "edible garden"
+            ]
+        },
+        {
+            "id": "PROD-002",
+            "name": "Basil Seeds",
+            "category": "seeds",
+            "price": 2.29,
+            "currency": "EUR",
+            "stock": 310,
+            "description": "Classic Genovese basil seeds ideal for kitchen gardens, containers, and companion planting with tomatoes. Aromatic leaves ready for harvest in just 6-8 weeks.",
+            "tags": [
+                "seeds",
+                "herb",
+                "spring",
+                "summer",
+                "edible garden",
+                "container friendly",
+                "aromatic"
+            ]
+        },
+        {
+            "id": "PROD-003",
+            "name": "Sunflower Seeds",
+            "category": "seeds",
+            "price": 2.99,
+            "currency": "EUR",
+            "stock": 198,
+            "description": "Giant sunflower seeds that grow up to 2 metres tall with stunning golden blooms. A favourite for children's gardens and attracting pollinators.",
+            "tags": [
+                "seeds",
+                "flower",
+                "spring",
+                "summer",
+                "pollinator friendly",
+                "children",
+                "cut flower"
+            ]
+        },
+        {
+            "id": "PROD-004",
+            "name": "Hot Pepper Seeds",
+            "category": "seeds",
+            "price": 3.99,
+            "currency": "EUR",
+            "stock": 175,
+            "description": "A spicy mix of cayenne, jalapeño, and habanero pepper seeds for heat lovers. Thrives in warm, sunny positions and produces abundantly throughout summer.",
+            "tags": [
+                "seeds",
+                "vegetable",
+                "spring",
+                "summer",
+                "hot pepper",
+                "edible garden",
+                "spicy"
+            ]
+        },
+        {
+            "id": "PROD-005",
+            "name": "Lavender Seeds",
+            "category": "seeds",
+            "price": 3.79,
+            "currency": "EUR",
+            "stock": 160,
+            "description": "English lavender seeds producing fragrant purple flower spikes beloved by bees and butterflies. Drought-tolerant and perfect for borders, paths, and Mediterranean-style gardens.",
+            "tags": [
+                "seeds",
+                "flower",
+                "perennial",
+                "spring",
+                "aromatic",
+                "pollinator friendly",
+                "drought tolerant"
+            ]
+        },
+        {
+            "id": "PROD-006",
+            "name": "Carrot Seeds",
+            "category": "seeds",
+            "price": 2.49,
+            "currency": "EUR",
+            "stock": 280,
+            "description": "Sweet Nantes variety carrot seeds producing crisp, tender roots ideal for fresh eating and juicing. Sow successionally from spring to midsummer for a continuous harvest.",
+            "tags": [
+                "seeds",
+                "vegetable",
+                "spring",
+                "summer",
+                "edible garden",
+                "root vegetable",
+                "beginner friendly"
+            ]
+        },
+        {
+            "id": "PROD-007",
+            "name": "Tulip Bulbs Mix",
+            "category": "bulbs",
+            "price": 12.95,
+            "currency": "EUR",
+            "stock": 120,
+            "description": "A vibrant mix of 25 premium tulip bulbs in red, yellow, pink, and purple shades. Plant in autumn for a spectacular spring display in beds, borders, or containers.",
+            "tags": [
+                "bulbs",
+                "flower",
+                "autumn planting",
+                "spring blooming",
+                "perennial",
+                "mixed colours",
+                "cut flower"
+            ]
+        },
+        {
+            "id": "PROD-008",
+            "name": "Daffodil Bulbs",
+            "category": "bulbs",
+            "price": 9.95,
+            "currency": "EUR",
+            "stock": 145,
+            "description": "Pack of 20 classic golden daffodil bulbs that naturalise beautifully year after year. One of the earliest spring flowers, ideal for planting under trees and in lawns.",
+            "tags": [
+                "bulbs",
+                "flower",
+                "autumn planting",
+                "spring blooming",
+                "perennial",
+                "naturalising",
+                "low maintenance"
+            ]
+        },
+        {
+            "id": "PROD-009",
+            "name": "Crocus Bulbs",
+            "category": "bulbs",
+            "price": 6.49,
+            "currency": "EUR",
+            "stock": 200,
+            "description": "A cheerful collection of 30 crocus corms in purple, white, and yellow that herald the arrival of spring. Perfect for rock gardens, lawns, and container displays.",
+            "tags": [
+                "bulbs",
+                "flower",
+                "autumn planting",
+                "spring blooming",
+                "perennial",
+                "compact",
+                "pollinator friendly"
+            ]
+        },
+        {
+            "id": "PROD-010",
+            "name": "Hyacinth Bulbs",
+            "category": "bulbs",
+            "price": 8.49,
+            "currency": "EUR",
+            "stock": 110,
+            "description": "Intensely fragrant hyacinth bulbs in a mix of blue, pink, and white. Pack of 10 bulbs, ideal for beds, pots, and indoor forcing during winter months.",
+            "tags": [
+                "bulbs",
+                "flower",
+                "autumn planting",
+                "spring blooming",
+                "fragrant",
+                "indoor growing",
+                "container friendly"
+            ]
+        },
+        {
+            "id": "PROD-011",
+            "name": "Allium Bulbs",
+            "category": "bulbs",
+            "price": 14.95,
+            "currency": "EUR",
+            "stock": 85,
+            "description": "Striking ornamental allium bulbs producing large, globe-shaped purple flower heads on tall stems. Pack of 8 bulbs that make a dramatic architectural statement in any garden.",
+            "tags": [
+                "bulbs",
+                "flower",
+                "autumn planting",
+                "spring blooming",
+                "perennial",
+                "architectural",
+                "deer resistant",
+                "pollinator friendly"
+            ]
+        },
+        {
+            "id": "PROD-012",
+            "name": "Stainless Steel Pruning Shears",
+            "category": "tools",
+            "price": 24.95,
+            "currency": "EUR",
+            "stock": 65,
+            "description": "Professional-grade bypass pruning shears with razor-sharp stainless steel blades and comfortable non-slip grip. Ideal for clean cuts on stems up to 20mm in diameter.",
+            "tags": [
+                "tools",
+                "pruning",
+                "stainless steel",
+                "all season",
+                "professional",
+                "durable"
+            ]
+        },
+        {
+            "id": "PROD-013",
+            "name": "Ergonomic Garden Spade",
+            "category": "tools",
+            "price": 34.99,
+            "currency": "EUR",
+            "stock": 42,
+            "description": "Full-size garden spade with an ergonomic D-grip handle and carbon steel blade for effortless digging. The ash wood shaft provides excellent shock absorption and durability.",
+            "tags": [
+                "tools",
+                "digging",
+                "ergonomic",
+                "carbon steel",
+                "all season",
+                "wood handle"
+            ]
+        },
+        {
+            "id": "PROD-014",
+            "name": "Steel Garden Rake",
+            "category": "tools",
+            "price": 19.99,
+            "currency": "EUR",
+            "stock": 55,
+            "description": "Heavy-duty 14-tine steel garden rake for levelling soil, removing debris, and preparing seed beds. Fitted with a sturdy fibreglass handle for lightweight yet strong performance.",
+            "tags": [
+                "tools",
+                "raking",
+                "steel",
+                "all season",
+                "soil preparation",
+                "lightweight"
+            ]
+        },
+        {
+            "id": "PROD-015",
+            "name": "10L Watering Can",
+            "category": "tools",
+            "price": 14.49,
+            "currency": "EUR",
+            "stock": 78,
+            "description": "Durable 10-litre galvanised steel watering can with a detachable brass rose for gentle watering. Classic design with a balanced handle for comfortable one-handed pouring.",
+            "tags": [
+                "tools",
+                "watering",
+                "galvanised steel",
+                "all season",
+                "classic design",
+                "brass rose"
+            ]
+        },
+        {
+            "id": "PROD-016",
+            "name": "Premium Garden Gloves",
+            "category": "tools",
+            "price": 8.95,
+            "currency": "EUR",
+            "stock": 130,
+            "description": "Breathable yet thorn-resistant garden gloves with reinforced leather palms and flexible knit backing. Available in medium and large sizes for a comfortable, secure fit.",
+            "tags": [
+                "tools",
+                "gloves",
+                "leather",
+                "all season",
+                "protective",
+                "breathable",
+                "thorn resistant"
+            ]
+        },
+        {
+            "id": "PROD-017",
+            "name": "Hand Transplanter",
+            "category": "tools",
+            "price": 9.49,
+            "currency": "EUR",
+            "stock": 72,
+            "description": "Narrow-blade hand transplanter with depth markings for precise planting of seedlings and bulbs. Features a rust-resistant aluminium alloy blade and soft-touch ergonomic handle.",
+            "tags": [
+                "tools",
+                "transplanting",
+                "aluminium",
+                "spring",
+                "compact",
+                "ergonomic",
+                "beginner friendly"
+            ]
+        },
+        {
+            "id": "PROD-018",
+            "name": "Terracotta Pot 30cm",
+            "category": "pots",
+            "price": 7.99,
+            "currency": "EUR",
+            "stock": 95,
+            "description": "Classic Italian-style terracotta pot with a 30cm diameter and drainage hole. Naturally porous clay regulates moisture and provides excellent root aeration for healthy plants.",
+            "tags": [
+                "pots",
+                "terracotta",
+                "clay",
+                "all season",
+                "classic",
+                "drainage",
+                "indoor",
+                "outdoor"
+            ]
+        },
+        {
+            "id": "PROD-019",
+            "name": "Glazed Ceramic Planter",
+            "category": "pots",
+            "price": 22.50,
+            "currency": "EUR",
+            "stock": 60,
+            "description": "Elegant hand-glazed ceramic planter in deep ocean blue with a glossy finish and matching saucer. 25cm diameter, frost-resistant, and perfect for patios or indoor display.",
+            "tags": [
+                "pots",
+                "ceramic",
+                "glazed",
+                "decorative",
+                "frost resistant",
+                "indoor",
+                "outdoor",
+                "premium"
+            ]
+        },
+        {
+            "id": "PROD-020",
+            "name": "Hanging Basket with Liner",
+            "category": "pots",
+            "price": 11.95,
+            "currency": "EUR",
+            "stock": 80,
+            "description": "35cm powder-coated wrought iron hanging basket complete with a natural coco fibre liner and hanging chains. Ideal for trailing petunias, fuchsias, and strawberry plants.",
+            "tags": [
+                "pots",
+                "hanging basket",
+                "wrought iron",
+                "coco liner",
+                "spring",
+                "summer",
+                "outdoor",
+                "trailing plants"
+            ]
+        },
+        {
+            "id": "PROD-021",
+            "name": "Raised Bed Kit 120x80cm",
+            "category": "pots",
+            "price": 54.95,
+            "currency": "EUR",
+            "stock": 35,
+            "description": "Easy-to-assemble raised bed kit made from FSC-certified treated pine, measuring 120x80x30cm. Perfect for growing vegetables, herbs, and flowers with improved drainage and soil control.",
+            "tags": [
+                "pots",
+                "raised bed",
+                "wood",
+                "FSC certified",
+                "vegetable garden",
+                "spring",
+                "all season",
+                "accessible gardening"
+            ]
+        },
+        {
+            "id": "PROD-022",
+            "name": "Seed Starting Tray 72 Cells",
+            "category": "pots",
+            "price": 4.49,
+            "currency": "EUR",
+            "stock": 150,
+            "description": "Professional 72-cell seed starting tray with a clear humidity dome and bottom drainage. Reusable BPA-free plastic designed for optimal seedling germination and root development.",
+            "tags": [
+                "pots",
+                "seed starting",
+                "propagation",
+                "spring",
+                "reusable",
+                "indoor",
+                "beginner friendly"
+            ]
+        },
+        {
+            "id": "PROD-023",
+            "name": "Universal Potting Mix 50L",
+            "category": "soil",
+            "price": 12.95,
+            "currency": "EUR",
+            "stock": 140,
+            "description": "Premium all-purpose potting mix enriched with perlite and slow-release nutrients for up to 6 weeks. Suitable for indoor plants, outdoor containers, and garden beds.",
+            "tags": [
+                "soil",
+                "potting mix",
+                "universal",
+                "all season",
+                "slow release nutrients",
+                "indoor",
+                "outdoor"
+            ]
+        },
+        {
+            "id": "PROD-024",
+            "name": "Cactus & Succulent Mix 10L",
+            "category": "soil",
+            "price": 6.95,
+            "currency": "EUR",
+            "stock": 110,
+            "description": "Fast-draining specialty soil blend with sand, perlite, and fine gravel formulated for cacti and succulents. Prevents root rot by ensuring excellent aeration and minimal water retention.",
+            "tags": [
+                "soil",
+                "cactus",
+                "succulent",
+                "specialty mix",
+                "fast draining",
+                "all season",
+                "indoor"
+            ]
+        },
+        {
+            "id": "PROD-025",
+            "name": "Orchid Bark Substrate 5L",
+            "category": "soil",
+            "price": 7.49,
+            "currency": "EUR",
+            "stock": 95,
+            "description": "Premium-grade pine bark substrate in medium chips specially graded for Phalaenopsis and other epiphytic orchids. Provides optimal air circulation around roots for healthy growth.",
+            "tags": [
+                "soil",
+                "orchid",
+                "bark",
+                "specialty mix",
+                "epiphytic",
+                "all season",
+                "indoor",
+                "premium"
+            ]
+        },
+        {
+            "id": "PROD-026",
+            "name": "Seed Starting Soil 20L",
+            "category": "soil",
+            "price": 8.49,
+            "currency": "EUR",
+            "stock": 125,
+            "description": "Ultra-fine, sterile seed starting mix with a light texture that promotes strong root development and even germination. Free from weed seeds and pathogens for the healthiest seedlings.",
+            "tags": [
+                "soil",
+                "seed starting",
+                "sterile",
+                "spring",
+                "fine texture",
+                "propagation",
+                "beginner friendly"
+            ]
+        },
+        {
+            "id": "PROD-027",
+            "name": "Organic Universal Fertilizer 5kg",
+            "category": "fertilizers",
+            "price": 18.95,
+            "currency": "EUR",
+            "stock": 90,
+            "description": "Certified organic granular fertilizer made from composted plant materials and natural minerals. Feeds all garden plants gently for up to 3 months while improving soil biology.",
+            "tags": [
+                "fertilizers",
+                "organic",
+                "granular",
+                "universal",
+                "slow release",
+                "all season",
+                "eco-friendly"
+            ]
+        },
+        {
+            "id": "PROD-028",
+            "name": "Rose & Flower Fertilizer 1kg",
+            "category": "fertilizers",
+            "price": 9.49,
+            "currency": "EUR",
+            "stock": 105,
+            "description": "Specially formulated fertilizer with high potassium content to promote abundant, vibrant blooms on roses and flowering plants. Apply every 4-6 weeks throughout the growing season.",
+            "tags": [
+                "fertilizers",
+                "roses",
+                "flowers",
+                "high potassium",
+                "spring",
+                "summer",
+                "blooming"
+            ]
+        },
+        {
+            "id": "PROD-029",
+            "name": "Lawn Fertilizer 10kg",
+            "category": "fertilizers",
+            "price": 22.95,
+            "currency": "EUR",
+            "stock": 75,
+            "description": "Professional-grade lawn fertilizer with a balanced NPK ratio for thick, lush green grass. Covers up to 250 square metres and includes iron for enhanced colour without excessive growth.",
+            "tags": [
+                "fertilizers",
+                "lawn",
+                "granular",
+                "spring",
+                "summer",
+                "autumn",
+                "iron enriched",
+                "professional"
+            ]
+        },
+        {
+            "id": "PROD-030",
+            "name": "Tomato & Vegetable Fertilizer 1L",
+            "category": "fertilizers",
+            "price": 7.95,
+            "currency": "EUR",
+            "stock": 130,
+            "description": "Concentrated liquid fertilizer with added calcium and magnesium to prevent blossom end rot and boost vegetable yields. Dilute and apply weekly during the growing season for best results.",
+            "tags": [
+                "fertilizers",
+                "liquid",
+                "tomato",
+                "vegetable",
+                "calcium",
+                "spring",
+                "summer",
+                "edible garden"
+            ]
+        }
+    ]
+}
