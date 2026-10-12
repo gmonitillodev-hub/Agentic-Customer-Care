@@ -1,13 +1,14 @@
 import os
 from pathlib import Path
 
-from agentic_customer_care.rag.embedding_model_provider.embedding_provider import EmbeddingProviderFactory
+from agentic_customer_care.providers.embedding_model_provider.embedding_provider import EmbeddingProviderFactory
 from utils import get_project_root
 
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
-from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
+import markdown2
+from bs4 import BeautifulSoup
 
 import re
 
@@ -67,6 +68,13 @@ def preprocess_documents(documents: list[Document]) -> list[Document]:
     print(f"\n    Preprocessing {len(documents)} documents...")
     
     for doc in documents:
+        
+        """ Convert markdown to plain text and clean the content """
+        html = markdown2.markdown(doc.page_content)
+
+        soup = BeautifulSoup(html, "html.parser")
+        doc.page_content = soup.get_text(separator="\n")
+        
         # Remove extra whitespace and normalize the text
         doc.page_content = re.sub(r'\s+', ' ', doc.page_content).strip()
         
