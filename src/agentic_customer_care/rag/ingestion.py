@@ -1,11 +1,14 @@
+import os
 from pathlib import Path
 
+from agentic_customer_care.rag.embedding_model_provider.embedding_provider import EmbeddingProviderFactory
 from utils import get_project_root
 
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_openai import OpenAIEmbeddings
-from langchain_community.vectorstores import Chroma 
 from langchain_core.documents import Document
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_chroma import Chroma
+
 import re
 
 def extract_documents_from_kb() -> list[Document]:
@@ -21,6 +24,8 @@ def extract_documents_from_kb() -> list[Document]:
     """
     
     kd_folder = Path(get_project_root() / "knowledge_base" / "documents")
+    
+    print(f"\n    Extracting documents from knowledge base folder: {kd_folder}")
     
     documents = []
     
@@ -44,6 +49,9 @@ def extract_documents_from_kb() -> list[Document]:
                                     }
                                 )
                             )
+    
+    print(f"    Number of documents extracted from knowledge base: {len(documents)}")
+    
     return documents
      
 def preprocess_documents(documents: list[Document]) -> list[Document]:
@@ -56,6 +64,8 @@ def preprocess_documents(documents: list[Document]) -> list[Document]:
         list[Document]: A list of preprocessed Document objects.
     """
     
+    print(f"\n    Preprocessing {len(documents)} documents...")
+    
     for doc in documents:
         # Remove extra whitespace and normalize the text
         doc.page_content = re.sub(r'\s+', ' ', doc.page_content).strip()
@@ -66,6 +76,8 @@ def preprocess_documents(documents: list[Document]) -> list[Document]:
         # Remove markdown titles (#, ##, ecc.)
         doc.page_content = re.sub(r'^#+\s*', '', doc.page_content, flags=re.MULTILINE)
         
+    print(f"    Preprocessed documents: {len(documents)}")
+        
     return documents
                           
 def chunk_documents(documents: list[Document]) -> list[Document]:
@@ -75,13 +87,16 @@ def chunk_documents(documents: list[Document]) -> list[Document]:
     Args:
         documents (list[Document]): A list of Document objects to be chunked.
     """
+    print(f"\n    Chunking {len(documents)} documents with RecursiveCharacterTextSplitter...")
     
     splitter = RecursiveCharacterTextSplitter(
-            chunk_size=500,
-            chunk_overlap=50
+           chunk_size=1000,        
+           chunk_overlap=200,     
+           separators=["\n\n", "\n", " ", ""],
         )
     chunks = splitter.split_documents(documents)
     
+    print(f"    Number of chunks created: {len(chunks)}")
     return chunks
     
 def create_vectorstore_from_chunks(chunks: list[Document]):
@@ -93,26 +108,64 @@ def create_vectorstore_from_chunks(chunks: list[Document]):
         chunks (list[Document]): A list of Document objects to be indexed in the vector store.
 
     """
-    # Embedding + Indexing — tutto in una riga
-    vectorstore = Chroma.from_documents(
-            documents=chunks,
-            embedding=OpenAIEmbeddings(model="text-embedding-3-small")
-        )
     
-    print(f" Chunk indicizzati: {len(chunks)}") 
+    PROVIDER_TYPE = os.getenv("EMBEDDING_PROVIDER", "huggingface")  # set in .env
+    
+    print(f"\n    Creating vectorstore from {len(chunks)} chunks using {PROVIDER_TYPE} embeddings... \n")
+    
+    embedding_provider = EmbeddingProviderFactory.get_embedding_provider(provider_type=PROVIDER_TYPE)
 
+    clear_vectorstore = input(f"    Do you want to clear the existing vectorstore? (y/n): ")
+    if clear_vectorstore.lower() == "y":
+        vectorstore = Chroma(persist_directory=str(get_project_root() / "knowledge_base" / "vectorstore"), 
+                         embedding_function=embedding_provider.get_embeddings_model())
+        
+        if vectorstore._collection.count() > 0:
+            vectorstore.delete_collection()
+            print(" \n   Existing vectorstore cleared. \n")
+        
+    try:
+        # Embedding + Indexing — tutto in una riga
+        vectorstore = Chroma.from_documents(
+                documents=chunks,
+                embedding=embedding_provider.get_embeddings_model(),
+                persist_directory=str(get_project_root() / "knowledge_base" / "vectorstore")
+            )
+        indexed_vector_number = vectorstore._collection.count()  # Trigger indexing
+        
+        if indexed_vector_number <= 0:
+            raise ValueError("No vectors were indexed. Please check the input documents and embeddings.")
+        
+        print(f"\n  Vectorstore created and persisted with {indexed_vector_number} vectors.")
+        
+    except Exception as e:
+        print(f"Error creating vectorstore: {e}")
+        raise e
+    
 def run_ingestion_pipeline():
     """
     Run the ingestion pipeline to extract, preprocess, and chunk documents from the knowledge base.
+    
+    Steps:
+        1. Extract documents from the knowledge base folder.
+        2. Preprocess the extracted documents.
+        3. Chunk the preprocessed documents into smaller pieces.
+        4. Create a vector store from the chunks using embeddings.
+        
     """
+    
+    print("\n---------------------------------------------------------------")
+    print("------------------------ Ingestion Pipeline ------------------- \n")
+    print(" \n  Running ingestion pipeline...")
     
     extracted_documents = extract_documents_from_kb()
     documents = preprocess_documents(extracted_documents)
     
-    print(f"Documenti estratti: {len(documents)}")
-    chunks = chunk_documents(documents)
-    print(f"Chunk creati: {len(chunks)}")
-    print(f"Primo chunk: {chunks[0].page_content} , metadata: {chunks[0].metadata}")
+    chunks = chunk_documents(documents)    
+    create_vectorstore_from_chunks(chunks)
+    
+    print("\n   Ingestion pipeline completed successfully.")
+    print("---------------------------------------------------------------\n")
  
     
 if __name__ == "__main__":

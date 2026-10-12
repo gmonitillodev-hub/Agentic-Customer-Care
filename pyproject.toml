@@ -10,5 +10,25 @@ requires-python = ">=3.14,<4.0.0"  # <--- Modificata questa riga
 dependencies = [
     "langchain-core (>=1.6.9,<2.0.0)",
     "langchain (>=1.4.4,<2.0.0)",
-    "langchain-community (>=0.4.2,<0.5.0)"
+    "langchain-community (>=0.4.2,<0.5.0)",
+    "langchain-openai (>=1.7.1,<2.0.0)",
+    "langchain-text-splitters (>=1.1.3,<2.0.0)",
+    "sentence-transformers (>=6.1.0,<7.0.0)",
+    "chromadb (>=1.5.9,<2.0.0)",
+    "langchain-huggingface (>=1.2.3,<2.0.0)",
+    "langchain-chroma (>=1.1.0,<2.0.0)"
 ]
+
+[project.scripts]
+ingest = "agentic_customer_care.rag.ingestion:run_ingestion_pipeline"
+test_retrival =  "agentic_customer_care.rag.retrival:test_retrieve_documents_from_vectorstore"
+
+[tool.poetry]
+packages = [
+    {include = "agentic_customer_care", from = "src"},
+    {include = "utils", from = "src"}
+]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
