@@ -17,6 +17,18 @@ Provide only accurate, tool-based answers. If the tool does not find data, say s
 
 """
 
+CC_AGENT_EXTRACTOR_PROMPT = """
+Extract all user personal information entities present in the following conversation text.
+The entities to extract are:
+
+- first_name
+- last_name
+- address_info (city, postal_code, region)
+- email
+
+Do not invent data or add extra text.
+
+"""
 
 ESCALATION_EMAIL_TEMPLATE = """<!DOCTYPE html>
 <html>

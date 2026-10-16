@@ -72,12 +72,17 @@ class CustomerCareAgent:
         sessionId = self._check_session(sessionId=sessionId)
         
         self.checkpointer_config = {"configurable": {"thread_id": sessionId}}
-        self._trim_messages(sessionId)
+        self._trim_messages()
         
         result = self.agent.invoke(
             {"messages": [{"role": "user", "content": message}]},
             config=self.checkpointer_config,
         )
+        print("🚀 ~ CustomerCareAgent ~ interact ~ result:", result["messages"])
+        
+        for message in result["messages"]:
+            print(f"Contetn -> {message.content}")
+        
         return result["structured_response"].model_dump(), sessionId
 
     """ 
