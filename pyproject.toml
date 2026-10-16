@@ -18,12 +18,16 @@ dependencies = [
     "langchain-huggingface (>=1.2.3,<2.0.0)",
     "langchain-chroma (>=1.1.0,<2.0.0)",
     "markdown2 (>=2.5.5,<3.0.0)",
-    "bs4 (>=0.0.2,<0.0.3)"
+    "bs4 (>=0.0.2,<0.0.3)",
+    "fastapi (>=0.143.0,<0.144.0)",
+    "uvicorn (>=0.54.0,<0.55.0)"
 ]
 
 [project.scripts]
 ingest = "agentic_customer_care.rag.ingestion:run_ingestion_pipeline"
 test_retrival =  "agentic_customer_care.rag.retrival:test_retrieve_documents_from_vectorstore"
+
+run_agent_gateway = "agentic_customer_care.api_gateway.fast_api:init_gateway"
 
 [tool.poetry]
 packages = [

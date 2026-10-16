@@ -3,10 +3,12 @@
 import html
 from datetime import datetime
 from pydantic import BaseModel
+from langchain_core.tools import tool 
 import requests
 from agentic_customer_care.providers.smtp.smtp_factory import SmtpFactory
 from utils.constants import ESCALATION_EMAIL_TEMPLATE
 
+@tool
 def escalate_request_to_human(message: str) -> str:
     """
     Escalates a request to a human agent.
@@ -49,6 +51,7 @@ class CurrentContext(BaseModel):
     location: Location
     date_time: str
 
+@tool
 def get_current_context() -> CurrentContext:
     """
     Retrieves the current context of the conversation or interaction.

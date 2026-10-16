@@ -30,7 +30,7 @@ def load_orders_from_kb() -> list[dict]:
 
     return orders
 
-""" @tool """
+@tool
 def get_order_status(order_id: str) -> str:
     """
     Get the status of an order from the Order Management System (OMS).

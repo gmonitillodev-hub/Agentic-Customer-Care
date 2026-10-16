@@ -15,14 +15,6 @@ You MUST ALWAYS use the available tools to retrieve any data, information, or an
 Your goal:
 Provide only accurate, tool-based answers. If the tool does not find data, say so explicitly.
 
-Retun also a structured json with these information:
-
-    {
-        "confidence" (float): A score from 0 to 10
-        "sources" (str): The source of data used Knowledge base, Web, Other
-        "needs_humans" (bool)
-    }
-
 """
 
 
