@@ -1,3 +1,5 @@
+from agentic_customer_care.agent.classes.sessions import SessionEntity
+from agentic_customer_care.agent.entity_extractor import EntityExtractorAgent
 from langchain.agents.middleware import AgentMiddleware, AgentState, ModelRequest, after_agent, dynamic_prompt
 import asyncio
 from langgraph.runtime import Runtime
