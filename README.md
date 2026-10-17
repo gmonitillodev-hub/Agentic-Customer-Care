@@ -111,4 +111,5 @@ These assets are sufficient to demonstrate the full capabilities of the agent an
 ## Documentation
 
 - [Architecture Documentation](docs/architecture.md) — System design, component diagrams, data flow
+- [Design Decisions](docs/decisions.md) — Log of technical decisions and their rationale
 - [Evaluation Documentation](docs/evaluation.md) — Test dataset, metrics, benchmark results

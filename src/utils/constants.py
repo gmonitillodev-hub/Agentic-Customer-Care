@@ -18,6 +18,9 @@ Provide only accurate, tool-based answers. If the tool does not find data, say s
 """
 
 CC_AGENT_EXTRACTOR_PROMPT = """
+
+You are an agent specialized in entity extraction from messages of an LLM conversation.
+
 Extract all user personal information entities present in the following conversation text.
 The entities to extract are:
 
@@ -41,3 +44,5 @@ ESCALATION_EMAIL_TEMPLATE = """<!DOCTYPE html>
     <p style="color: #888; font-size: 12px;">— Support Team</p>
   </body>
 </html>"""
+
+MAX_MEMORY_TOKEN = 2000

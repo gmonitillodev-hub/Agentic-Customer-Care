@@ -1,34 +1,23 @@
 import os
-import uuid
 
+from agentic_customer_care.agent.classes.sessions import SessionEntityData
 from dotenv import load_dotenv
+import json
 
-from agentic_customer_care.agent.tools.tools_index import get_all_tools
 from langchain.agents import create_agent
 from langchain.agents.structured_output import ToolStrategy
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from langchain.chat_models import init_chat_model
+from langchain_core.messages import HumanMessage,  AIMessage, ToolMessage
+
 
 from utils.constants import CC_AGENT_EXTRACTOR_PROMPT
 
 load_dotenv()
 
-class AddressInfo(BaseModel):
-    city: str | None = None
-    postal_code: str | None = None
-    region: str | None = None
-
-class UserInfo(BaseModel):
-    
-    name: str | None = None
-    surname: str | None = None
-    email: str | None = None
-    address_info: AddressInfo | None = None
-
-class AgentResponse(BaseModel):
-    user_info: UserInfo | None = None
-    
-
+class ExtractorMessage(BaseModel):
+    content: str
+    source:str
 class EntityExtractorAgent:
     
     def __init__(self):
@@ -51,10 +40,11 @@ class EntityExtractorAgent:
         self.agent = create_agent(
             model=model,
             system_prompt=CC_AGENT_EXTRACTOR_PROMPT,
-            response_format=ToolStrategy(AgentResponse), # Define a tool useful to format the response in a given BaseModel
+            response_format=ToolStrategy(SessionEntityData), # Define a tool useful to format the response in a given BaseModel
             debug=os.getenv("AGENT_VERBOSE", "false").lower() == "true",
         )
-
+        
+    
     """ 
         Agent invoke with session data.
         
@@ -66,21 +56,42 @@ class EntityExtractorAgent:
             AgentResponse: Structured json response from agent
             sessionId: UUID used to store the historical context
     """
-    def invoke(self, context: str):
+    def invoke(self, context: str) -> SessionEntityData | dict:
+        
+        messages = self._get_messages_from_context(context)
+        if len(messages) == 0:
+            return {}
+        
+        result = self.agent.invoke(self._build_input(messages))
+        return result["structured_response"]
+
+    @staticmethod
+    def _build_input(messages: list[ExtractorMessage]) -> dict:
+        serialized_messages = json.dumps([m.model_dump() for m in messages], indent=2, ensure_ascii=False)
+        return {"messages": [{"role": "user", "content": serialized_messages}]}
+    
+    @staticmethod
+    def _get_messages_from_context(context) -> list[ExtractorMessage]:
+        
+        messages = context["messages"]
                 
-        result = self.agent.invoke(
-            {"messages": [{"role": "user", "content": context}]}
-        )
-        return result
-  
+        if not messages or (len(messages) <= 0):
+            return []
+                
+        formatted_messages: list[ExtractorMessage] = []      
+        for msg in messages:
+                    
+            formatted_messages.append( ExtractorMessage(
+                content = msg.content or "",
+                source  = type(msg).__name__
+                ))
+            
+        return formatted_messages
+    
 
 def test_enity_extractor():
    
-    EG_CONTEXT = """ 
-    
-    [HumanMessage(content='Ciao sono Nicola', additional_kwargs={}, response_metadata={}, id='4b4edf6d-1af5-4e85-afcc-28800c42acd0'), AIMessage(content='', additional_kwargs={'refusal': None}, response_metadata={'token_usage': {'completion_tokens': 109, 'prompt_tokens': 872, 'total_tokens': 981, 'completion_tokens_details': {'accepted_prediction_tokens': None, 'audio_tokens': None, 'reasoning_tokens': 89, 'rejected_prediction_tokens': None, 'text_tokens': None}, 'prompt_tokens_details': None, 'queue_time': 0.03646452, 'prompt_time': 0.043854298, 'completion_time': 0.148842031, 'total_time': 0.192696329}, 'model_provider': 'openai', 'model_name': 'openai/gpt-oss-20b', 'system_fingerprint': 'fp_d3e146e1a5', 'id': 'chatcmpl-11df2e3b-3ccc-4bf7-9581-05e1690a4249', 'service_tier': 'on_demand', 'finish_reason': 'tool_calls', 'logprobs': None}, id='lc_run--01a145d9-e104-7361-81e6-0868ec35eb21-0', tool_calls=[{'name': 'get_current_context', 'args': {}, 'id': 'fc_fcdef7d3-cacf-4dea-9e67-cf04facacaee', 'type': 'tool_call'}], invalid_tool_calls=[], usage_metadata={'input_tokens': 872, 'output_tokens': 109,'total_tokens': 981, 'input_token_details': {}, 'output_token_details': {'reasoning': 89}}), ToolMessage(content="location=Location(city='Andria', timezone='Europe/Rome', country='IT', region='Apulia') date_time='2026-10-16 19:54:29'", name='get_current_context', id='591c7107-c826-484e-a461-8fe0a5338e88', tool_call_id='fc_fcdef7d3-cacf-4dea-9e67-cf04facacaee'), AIMessage(content='', additional_kwargs={'refusal': None}, response_metadata={'token_usage': {'completion_tokens': 118, 'prompt_tokens': 933, 'total_tokens': 1051, 'completion_tokens_details': {'accepted_prediction_tokens': None, 'audio_tokens': None, 'reasoning_tokens': 62, 'rejected_prediction_tokens': None, 'text_tokens': None}, 'prompt_tokens_details': None, 'queue_time': 0.299290368, 'prompt_time': 0.080625336, 'completion_time': 0.129607262, 'total_time': 0.210232598}, 'model_provider': 'openai', 'model_name': 'openai/gpt-oss-20b', 'system_fingerprint': 'fp_a8c584dda7', 'id': 'chatcmpl-7329af78-cdc0-4dd1-876d-85fc0076caa6', 'service_tier': 'on_demand', 'finish_reason': 'tool_calls', 'logprobs': None}, id='lc_run--01a145d9-e3b6-7c21-bcb3-6a492dfd7c24-0', tool_calls=[{'name': 'AgentResponse', 'args': {'answer': 'Ciao Nicola! Come posso aiutarti oggi con i nostri prodotti per il giardino?', 'confidence': 9, 'needs_humans': False, 'sources': 'ConversationContext'}, 'id': 'fc_ba065bdb-5cf8-47fc-87cf-b92c4376ad42', 'type': 'tool_call'}], invalid_tool_calls=[], usage_metadata={'input_tokens': 933, 'output_tokens': 118, 'total_tokens': 1051, 'input_token_details': {}, 'output_token_details': {'reasoning': 62}}), ToolMessage(content="Returning structured response: answer='Ciao Nicola! Come posso aiutarti oggi con i nostri prodotti per il giardino?' confidence=9.0 sources='ConversationContext' needs_humans=False", name='AgentResponse', id='86a4c44f-aa0f-4ad2-8694-87033a747c0b', tool_call_id='fc_ba065bdb-5cf8-47fc-87cf-b92c4376ad42')]
-    
-    """
+    EG_CONTEXT = {'messages': [HumanMessage(content='Ciao sono Nicola', additional_kwargs={}, response_metadata={}, id='727f82b3-57b0-4585-8e0c-ec3fb9c36fbb'), AIMessage(content='', additional_kwargs={'refusal': None}, response_metadata={'token_usage': {'completion_tokens': 109, 'prompt_tokens': 872, 'total_tokens': 981, 'completion_tokens_details': {'accepted_prediction_tokens': None, 'audio_tokens': None, 'reasoning_tokens': 89, 'rejected_prediction_tokens': None, 'text_tokens': None}, 'prompt_tokens_details': None, 'queue_time': 0.182525601, 'prompt_time': 0.048779949, 'completion_time': 0.11848283, 'total_time': 0.167262779}, 'model_provider': 'openai', 'model_name': 'openai/gpt-oss-20b', 'system_fingerprint': 'fp_ce54c53bd5', 'id': 'chatcmpl-7d4c7c63-b9cd-4276-8369-0aa496bd6cdf', 'service_tier': 'on_demand', 'finish_reason': 'tool_calls', 'logprobs': None}, id='lc_run--01a148f7-4dcd-7cd3-830b-bedf0d105259-0', tool_calls=[{'name': 'get_current_context', 'args': {}, 'id': 'fc_0ca26183-c162-4527-b686-6b6227eb4c5b', 'type': 'tool_call'}], invalid_tool_calls=[], usage_metadata={'input_tokens': 872, 'output_tokens': 109, 'total_tokens': 981, 'input_token_details': {}, 'output_token_details': {'reasoning': 89}}), ToolMessage(content="location=Location(city='Andria', timezone='Europe/Rome', country='IT', region='Apulia') date_time='2026-10-17 10:25:29'", name='get_current_context', id='9f2516e8-724c-4f17-bb4c-7392514d17b1', tool_call_id='fc_0ca26183-c162-4527-b686-6b6227eb4c5b'), AIMessage(content='', additional_kwargs={'refusal': None}, response_metadata={'token_usage': {'completion_tokens': 86, 'prompt_tokens': 933, 'total_tokens': 1019, 'completion_tokens_details': {'accepted_prediction_tokens': None, 'audio_tokens': None, 'reasoning_tokens': 31, 'rejected_prediction_tokens': None, 'text_tokens': None}, 'prompt_tokens_details': None, 'queue_time': 0.047226204, 'prompt_time': 0.083343906, 'completion_time': 0.088796056, 'total_time': 0.172139962}, 'model_provider': 'openai', 'model_name': 'openai/gpt-oss-20b', 'system_fingerprint': 'fp_d3e146e1a5', 'id': 'chatcmpl-4653213a-6a44-4c9f-8be0-5f4d5d69a662', 'service_tier': 'on_demand', 'finish_reason': 'tool_calls', 'logprobs': None}, id='lc_run--01a148f7-50c2-7061-bdbf-3eafcb80daa8-0', tool_calls=[{'name': 'AgentResponse', 'args': {'answer': 'Ciao Nicola! Come posso aiutarti oggi con i nostri prodotti da giardino?', 'confidence': 9, 'needs_humans': False, 'sources': 'ConversationContext'}, 'id': 'fc_5d92451f-3314-4832-bb83-0a39be0ae887', 'type': 'tool_call'}], invalid_tool_calls=[], usage_metadata={'input_tokens': 933, 'output_tokens': 86, 'total_tokens': 1019, 'input_token_details': {}, 'output_token_details': {'reasoning': 31}}), ToolMessage(content="Returning structured response: answer='Ciao Nicola! Come posso aiutarti oggi con i nostri prodotti da giardino?' confidence=9.0 sources='ConversationContext' needs_humans=False", name='AgentResponse', id='9db025c8-1912-40a2-8093-cdca57cdcc76', tool_call_id='fc_5d92451f-3314-4832-bb83-0a39be0ae887')], 'structured_response': AgentResponse(answer='Ciao Nicola! Come posso aiutarti oggi con i nostri prodotti da giardino?', confidence=9.0, sources='ConversationContext', needs_humans=False)}
    
     agent = EntityExtractorAgent()
     
