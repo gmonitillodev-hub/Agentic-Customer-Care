@@ -26,8 +26,9 @@ The entities to extract are:
 
 - first_name
 - last_name
-- address_info (city, postal_code, region)
+- address_info (city, postal_code, region, street)
 - email
+- order informations (orderIds requested, issues solved and to be solved, additional relevant informations)
 
 Do not invent data or add extra text.
 

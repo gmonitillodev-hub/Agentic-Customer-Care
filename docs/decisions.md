@@ -51,3 +51,39 @@ Log of technical decisions. Newest entries at the bottom.
 - Async-only hook: the agent must be run with `ainvoke`; `invoke` would fail because no sync hook exists.
 - Entities are sent to the LLM in the prompt (privacy consideration, same as the extractor).
 - `_trim_messages` only trims `messages`, so entities are never lost when history is trimmed.
+
+### Known design trade-offs (entity extraction)
+
+- **Trimming can be more aggressive.** Key user data lives in `SessionEntity` (not in the message history), so `max_memory_token` can be lowered. Keeping too much text in the context pushes the model to lose focus, and the problem grows with very long chats.
+- **Entity memory must stay small.** Everything in `SessionEntity` is injected in every system prompt, so unbounded growth would inflate the context again. Prompting strategies for the extractor (extract only relevant, stable fields; no free text) are to be evaluated to limit what is stored.
+
+### Entity memory management (storage of relevant info)
+
+The entity memory is the deterministic store for the relevant information of a session. It replaces summarization (see D-002): exact values are kept as structured fields instead of being rewritten by an LLM.
+
+- **Schema-driven.** Only fields declared in `SessionEntityData` (and nested models such as `UserInfo`, `AddressInfo`) can be stored. Adding a new kind of relevant info (e.g. an order id) means adding a typed field, not storing free text.
+- **Scope.** One `SessionEntity` per `sessionId`, held in `CustomerCareAgent.session_data`. It lives in process memory: it is lost on restart and not shared across instances. Persistence (DB/Redis) is not covered yet.
+- **Write path.** Only the background extractor writes, via `merge_data`, after each answer. The main agent never writes entities directly.
+- **Merge policy.** Field by field, recursive on nested models. A new non-`None` value overwrites the old one; `None` never erases an existing value.
+- **Read path.** Every model call receives the current entities in the system prompt (`entities_prompt`), so they are never affected by trimming.
+- **Limits by design.** Bounded size comes from the schema (typed, finite fields) and from the extractor prompt (extract only stable, relevant data). Open points to evaluate:
+  - how to correct a wrong value: today the latest extraction wins, so a mistaken extraction overwrites a correct value;
+  - how to explicitly delete or invalidate a value when the user retracts it, since `None` is ignored;
+  - which entities are relevant for the use case (order ids, issue references, contact data) and their validation (formats, e.g. order id pattern);
+  - persistence and expiry of the entity memory per session.
+
+## D-002 — Short-term memory: trimming, not summarization
+
+**Decision.** Keep trimming (`_trim_messages`) as the short-term memory strategy; do not introduce summarization.
+
+**Why summarization does not make sense here**
+
+The agent operates in a context close to AMS (application management support): little text, few but highly relevant pieces of information, aimed at creating and solving very specific issues. This implies that:
+
+1. In most use cases the context is not large, so there is little to gain from compressing it.
+2. Summarization introduces non-determinism in how the context is built. A summary may report untrue or slightly different data, e.g. a wrong digit in an order id, and mislead the rest of the conversation.
+
+**Consequences**
+
+- Exact values (ids, names, emails) are preserved verbatim in the message history, or in the entity memory.
+- When history exceeds the token limit, the oldest messages are dropped rather than rewritten.

@@ -12,6 +12,7 @@ from langchain_core.messages import HumanMessage,  AIMessage, ToolMessage
 
 
 from utils.constants import CC_AGENT_EXTRACTOR_PROMPT
+from utils.logger import setup_agent_logger
 
 load_dotenv()
 
@@ -23,16 +24,20 @@ class EntityExtractorAgent:
     def __init__(self):
         
         self.agent = None
+        
+        self.logger = setup_agent_logger(True)
             
         self.init_agent() # Start the initialization
 
-    """ 
-        Agent definition and initialization
-    """
+
     def init_agent(self):
+        """ 
+            Agent definition and initialization
+        """
+        
         model = init_chat_model(
-            model=os.getenv("LLM_MODEL","openai/gpt-oss-20b"),
-            model_provider=os.getenv("LLM_PROVIDER","openai"),
+            model=os.getenv("EXTRACTOR_LLM_MODEL","openai/gpt-oss-20b"),
+            model_provider=os.getenv("EXTRACTOR_LLM_PROVIDER","openai"),
             temperature=0, 
             api_key=os.getenv("OPENAI_API_KEY"),
             base_url=os.getenv("OPENAI_API_BASE") or None
@@ -44,26 +49,30 @@ class EntityExtractorAgent:
             debug=os.getenv("AGENT_VERBOSE", "false").lower() == "true",
         )
         
-    
-    """ 
-        Agent invoke with session data.
-        
-        Args:
-            sessionId (UUID)
-            message (str): user query
-        
-        Returns:
-            AgentResponse: Structured json response from agent
-            sessionId: UUID used to store the historical context
-    """
+
+
     def invoke(self, context: str) -> SessionEntityData | dict:
+        """ 
+            Agent invoke with context data.
+            
+            Args:
+                context (str): conversation context
+            
+            Returns:
+                SessionEntityData
+        """
         
         messages = self._get_messages_from_context(context)
         if len(messages) == 0:
             return {}
         
         result = self.agent.invoke(self._build_input(messages))
-        return result["structured_response"]
+        structured_response = result["structured_response"]
+        
+        self.logger.info(f"Entity extraction requested")
+        self.logger.debug(f"Entity extracted -> {structured_response}")
+        
+        return structured_response
 
     @staticmethod
     def _build_input(messages: list[ExtractorMessage]) -> dict:

@@ -8,6 +8,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
 from langchain_chroma import Chroma
 import markdown2
+import json
 from bs4 import BeautifulSoup
 
 import re
@@ -104,6 +105,18 @@ def chunk_documents(documents: list[Document]) -> list[Document]:
         )
     chunks = splitter.split_documents(documents)
     
+    output_dir = Path(get_project_root() / "knowledge_base" / "ingestion")
+    os.makedirs(output_dir, exist_ok=True)  # crea la cartella se non esiste
+
+    output_path = os.path.join(output_dir, "chunks.jsonl")
+    with open(output_path, "w", encoding="utf-8") as f:
+        for doc in chunks:
+            d = {
+            "page_content": doc.page_content,
+            "metadata": doc.metadata
+            }
+            f.write(json.dumps(d, ensure_ascii=False) + "\n")
+    
     print(f"    Number of chunks created: {len(chunks)}")
     return chunks
     
@@ -170,6 +183,7 @@ def run_ingestion_pipeline():
     documents = preprocess_documents(extracted_documents)
     
     chunks = chunk_documents(documents)    
+    print("🚀 ~ run_ingestion_pipeline ~ chunks:", chunks)
     create_vectorstore_from_chunks(chunks)
     
     print("\n   Ingestion pipeline completed successfully.")

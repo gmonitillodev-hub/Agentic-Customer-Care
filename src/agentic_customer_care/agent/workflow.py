@@ -5,6 +5,7 @@ from agentic_customer_care.agent.classes.cc_agent import AgentResponse, Interact
 from agentic_customer_care.agent.classes.sessions import SessionEntity
 from agentic_customer_care.agent.entity_extractor import EntityExtractorAgent
 from agentic_customer_care.agent.middlewares.mw import build_entities_updater, build_prompt_enrichment
+from agentic_customer_care.rag.retrival import HybridRetriever
 from dotenv import load_dotenv
 
 from agentic_customer_care.agent.tools.tools_index import get_all_tools
@@ -20,6 +21,7 @@ from langchain_core.messages.utils import count_tokens_approximately
 
 from utils.constants import CC_AGENT_SYSTEM_PROMPT, MAX_MEMORY_TOKEN
 from utils.functions import _merge_models
+from utils.logger import setup_agent_logger
 
 load_dotenv()
 
@@ -30,17 +32,20 @@ class CustomerCareAgent:
         
         self.tools = get_all_tools() # Get all fuction / tools typed as StructuredTool that will be passed to the model
 
+        self.logger = setup_agent_logger(True)
         self.agent = None
         
         self.session_data: dict[str, SessionEntity] = {} 
         self.entity_extr_agent = EntityExtractorAgent()
         
+        self.kb_retriever = HybridRetriever() # Initialize singleton class of retriever (loads weights just one time at init operation)
         self.init_agent() # Start the initialization
 
-    """ 
-        Agent definition and initialization
-    """
     def init_agent(self):
+        
+        """ 
+            Agent definition and initialization
+        """
         model = init_chat_model(
             model=os.getenv("LLM_MODEL","openai/gpt-oss-20b"),
             model_provider=os.getenv("LLM_PROVIDER","openai"),
@@ -58,25 +63,31 @@ class CustomerCareAgent:
             debug=os.getenv("AGENT_VERBOSE", "false").lower() == "true",
         )
         
+        self.logger.info(f"Customer care Agent initialized - Model: {os.getenv("LLM_MODEL","openai/gpt-oss-20b")}")
         
-    """ 
-        Agent invoke with session data (async).
         
-        Args:
-            sessionId (UUID)
-            message (str): user query
-        
-        Returns:
-            AgentResponse: Structured json response from agent
-            sessionId: UUID used to store the historical context
-        
-        Entity extraction runs in the background after the answer: it is not awaited here.
-    """
+
     async def interact(self, sessionId: str, message: str) -> InteractResponse:
-        
+        """ 
+            Agent invoke with session data (async).
+            
+            Args:
+                sessionId (UUID)
+                message (str): user query
+            
+            Returns:
+                AgentResponse: Structured json response from agent
+                sessionId: UUID used to store the historical context
+            
+            Entity extraction runs in the background after the answer: it is not awaited here.
+        """
+
         sessionId = self._check_session(sessionId=sessionId)
         session_data: SessionEntity = self.session_data[sessionId]
         
+        self.logger.info(f"New agent interaction for sessionId: {sessionId}")
+        self.logger.debug(f"SessionData of {sessionId} -> {session_data}")
+       
         self.checkpointer_config = {"configurable": {"thread_id": sessionId}}
         self._trim_messages()
         
@@ -86,6 +97,8 @@ class CustomerCareAgent:
             context=session_data,
         )
         
+        self.logger.debug(f"Response for {sessionId} -> {result}")
+        
         return InteractResponse(
                 data = result["structured_response"].model_dump(), 
                 sessionId = sessionId
@@ -93,6 +106,7 @@ class CustomerCareAgent:
         
     def export_session_data(self, sessionId: str) -> SessionEntity:
         """ 
+            Return data of a specific session.
         """
         
         if sessionId and sessionId in self.session_data:

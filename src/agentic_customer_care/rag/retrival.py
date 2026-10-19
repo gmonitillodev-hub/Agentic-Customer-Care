@@ -1,70 +1,80 @@
+from pathlib import Path
+
 from agentic_customer_care.providers.embedding_model_provider.embedding_provider import EmbeddingProviderFactory
 from langchain_chroma import Chroma
 from utils import get_project_root
-from pydantic import BaseModel
+from langchain_community.retrievers import BM25Retriever
+from langchain_classic.retrievers import EnsembleRetriever
+import json
+import threading
+from langchain_core.documents import Document
 
-class DocumentFromKB(BaseModel):
-    page_content: str
-    metadata: dict
-    score: float
-    
-def map_retrived_docuents(retrieved_docs: list) -> list[DocumentFromKB]:
+
+class HybridRetriever:
     """
-    Map the retrieved documents to a list of Document objects.
-
-    Args:
-        retrieved_docs (list[tuple[Document, float]]): A list of tuples containing Document objects and their similarity scores.
-
-    Returns:
+        Singleton: embeddings, Chroma and chunks are loaded once and reused.
+        This avoid wrights loading for each retrieve improving the TTFT.
+        
+        Singleton because will be used in a tool, so We are confident that will
+        not created more instances.
     """
-    
-    documents: list = []
-    
-    for doc, score in retrieved_docs:        
-        document = DocumentFromKB(
-            page_content=doc.page_content,
-            metadata=doc.metadata,
-            score=score
-        )
-        documents.append(document)
 
-    return documents
+    _instance: "HybridRetriever | None" = None
+    _lock = threading.Lock()
 
-def retrieve_documents_from_vectorstore(query: str, top_k: int = 5) -> list[DocumentFromKB]:
-    """
-    Retrieve documents from the vectorstore based on a query.
+    def __new__(cls):
+        with cls._lock:
+            if cls._instance is None:
+                instance = super().__new__(cls)
+                instance._initialized = False
+                cls._instance = instance
+        return cls._instance
 
-    Args:
-        query (str): The query string to search for.
-        top_k (int): The number of top documents to retrieve.
+    def __init__(self):
+        with self._lock:
+            if self._initialized:
+                return
+            embedding_provider = EmbeddingProviderFactory.get_embedding_provider()
+            self._vectorstore = Chroma(
+                persist_directory=str(get_project_root() / "knowledge_base" / "vectorstore"),
+                embedding_function=embedding_provider.get_embeddings_model(),
+            )
+            chunks_path = Path(get_project_root() / "knowledge_base" / "ingestion" / "chunks.jsonl")
+            self._chunks = []
+            with open(chunks_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    d = json.loads(line)
+                    self._chunks.append(Document(page_content=d["page_content"], metadata=d["metadata"]))
+            self._initialized = True
+            
+            
 
-    Returns:
-        list[Document]: A list of retrieved Document objects.
-    """
+    def retrieve(self, query: str, top_k: int = 5, semantic_ratio: float = 0.6) -> list[Document]:
+        
+        if not (0.0 <= semantic_ratio <= 1.0):
+            raise ValueError("Il parametro semantic_ratio deve essere compreso tra 0 e 1")
     
-    embedding_provider = EmbeddingProviderFactory.get_embedding_provider()
-    
-    # Load the vectorstore
-    vectorstore = Chroma(persist_directory=str(get_project_root() / "knowledge_base" / "vectorstore"), 
-                         embedding_function=embedding_provider.get_embeddings_model())
-    
-    # Perform similarity search
-    retrieved_docs = vectorstore.similarity_search_with_score(query, k=top_k)
-    
-    mapped_docs = map_retrived_docuents(retrieved_docs)
-    
-    return mapped_docs
+    # Calcolo automatico del peso per il BM25
+        bm25_weight = 1.0 - semantic_ratio
+        bm25 = BM25Retriever.from_documents(self._chunks, k=top_k)
+        semantic = self._vectorstore.as_retriever(search_kwargs={"k": top_k})
+        # Hybrid — 40% BM25, 60% vector
+        hybrid = EnsembleRetriever(retrievers=[bm25, semantic], weights=[bm25_weight, semantic_ratio])
+        
+        return hybrid.invoke(query)[:top_k]
+
+
 
 def test_retrieve_documents_from_vectorstore():
     
-    TOP_K = 3
+    TOP_K = 5
     
     proceed = True
     while proceed:
         
     
         query = input(" Enter a query to retrieve documents from the vectorstore: ")
-        retrieved_docs = retrieve_documents_from_vectorstore(query, TOP_K)
+        retrieved_docs = HybridRetriever().retrieve(query, TOP_K)
         
         print(f"\n    Retrieved {len(retrieved_docs)} documents for query: '{query}'")
         for i, doc in enumerate(retrieved_docs):
