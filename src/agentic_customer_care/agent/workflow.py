@@ -20,6 +20,7 @@ from langgraph.graph.message import REMOVE_ALL_MESSAGES
 from langchain_core.messages.utils import count_tokens_approximately
 
 from utils.constants import CC_AGENT_SYSTEM_PROMPT, MAX_MEMORY_TOKEN
+from utils.config import get_config
 from utils.functions import _merge_models
 from utils.logger import setup_agent_logger
 
@@ -47,11 +48,11 @@ class CustomerCareAgent:
             Agent definition and initialization
         """
         model = init_chat_model(
-            model=os.getenv("LLM_MODEL","openai/gpt-oss-20b"),
-            model_provider=os.getenv("LLM_PROVIDER","openai"),
+            model=get_config("LLM_MODEL","openai/gpt-oss-20b"),
+            model_provider=get_config("LLM_PROVIDER","openai"),
             temperature=0, 
-            api_key=os.getenv("OPENAI_API_KEY"),
-            base_url=os.getenv("OPENAI_API_BASE") or None
+            api_key=get_config("OPENAI_API_KEY"),
+            base_url=get_config("OPENAI_API_BASE") or None
         )
         self.agent = create_agent(
             model=model,
@@ -60,10 +61,10 @@ class CustomerCareAgent:
             context_schema=SessionEntity,
             response_format=ToolStrategy(AgentResponse), # Define a tool useful to format the response in a given BaseModel
             checkpointer=InMemorySaver(), # Checkpointer based on sessionId
-            debug=os.getenv("AGENT_VERBOSE", "false").lower() == "true",
+            debug=get_config("AGENT_VERBOSE", "false").lower() == "true",
         )
         
-        self.logger.info(f"Customer care Agent initialized - Model: {os.getenv("LLM_MODEL","openai/gpt-oss-20b")}")
+        self.logger.info(f"Customer care Agent initialized - Model: {get_config("LLM_MODEL","openai/gpt-oss-20b")}")
         
         
 

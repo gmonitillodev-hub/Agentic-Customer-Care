@@ -12,6 +12,7 @@ from langchain_core.messages import HumanMessage,  AIMessage, ToolMessage
 
 
 from utils.constants import CC_AGENT_EXTRACTOR_PROMPT
+from utils.config import get_config
 from utils.logger import setup_agent_logger
 
 load_dotenv()
@@ -36,17 +37,17 @@ class EntityExtractorAgent:
         """
         
         model = init_chat_model(
-            model=os.getenv("EXTRACTOR_LLM_MODEL","openai/gpt-oss-20b"),
-            model_provider=os.getenv("EXTRACTOR_LLM_PROVIDER","openai"),
+            model=get_config("EXTRACTOR_LLM_MODEL","openai/gpt-oss-20b"),
+            model_provider=get_config("EXTRACTOR_LLM_PROVIDER","openai"),
             temperature=0, 
-            api_key=os.getenv("OPENAI_API_KEY"),
-            base_url=os.getenv("OPENAI_API_BASE") or None
+            api_key=get_config("OPENAI_API_KEY"),
+            base_url=get_config("OPENAI_API_BASE") or None
         )
         self.agent = create_agent(
             model=model,
             system_prompt=CC_AGENT_EXTRACTOR_PROMPT,
             response_format=ToolStrategy(SessionEntityData), # Define a tool useful to format the response in a given BaseModel
-            debug=os.getenv("AGENT_VERBOSE", "false").lower() == "true",
+            debug=get_config("AGENT_VERBOSE", "false").lower() == "true",
         )
         
 

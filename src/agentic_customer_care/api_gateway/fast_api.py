@@ -1,5 +1,6 @@
 from agentic_customer_care.agent.workflow import CustomerCareAgent
 from fastapi import FastAPI, HTTPException, Response, Cookie
+from utils.config import get_config
 import os
 import uvicorn
 
@@ -64,8 +65,8 @@ def get_session_data(session_id: str):
     
 def init_gateway():    
     
-    host = os.getenv("AGENT_GATEWAY_HOST", "127.0.0.1")
-    port = int(os.getenv("AGENT_GATEWAY_PORT", "8100"))
+    host = get_config("AGENT_GATEWAY_HOST", "127.0.0.1")
+    port = int(get_config("AGENT_GATEWAY_PORT", "8100"))
 
     try:
         

@@ -1,8 +1,7 @@
-import os
-
 from dotenv import load_dotenv
 from langchain_openai import OpenAIEmbeddings
 from langchain_huggingface import HuggingFaceEmbeddings
+from utils.config import get_config
 
 load_dotenv()
 
@@ -24,8 +23,8 @@ class HuggingFaceEmbeddingProvider:
 class EmbeddingProviderFactory:
     @staticmethod
     def get_embedding_provider(provider_type: str | None = None, model_name: str | None = None):
-        provider_type = provider_type or os.getenv("EMBEDDING_PROVIDER", "huggingface")
-        model_name = model_name or os.getenv("EMBEDDING_MODEL_NAME") or None
+        provider_type = provider_type or get_config("EMBEDDING_PROVIDER", "huggingface")
+        model_name = model_name or get_config("EMBEDDING_MODEL_NAME") or None
         if provider_type == "openai":
             return OpenAIEmbeddingProvider(model_name)
         elif provider_type == "huggingface":
