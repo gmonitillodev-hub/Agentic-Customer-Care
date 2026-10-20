@@ -1,20 +1,20 @@
 
 
+import os
 import smtplib
 from email.message import EmailMessage
 from dotenv import load_dotenv
-from utils.config import get_config
 
 class MailtrapSmtpProvider:
     
     def __init__(self):
         # Initialize the Mailtrap SMTP provider with necessary configurations
         load_dotenv()  # Load environment variables from .env file
-        self.smtp_server = get_config("SMTP_SERVER", "smtp.mailtrap.io")
-        self.smtp_port = int(get_config("SMTP_PORT", "2525"))
-        self.username = get_config("SMTP_USERNAME")
-        self.password = get_config("SMTP_PASSWORD")
-        self.sender = get_config("SMTP_SENDER", "no-reply@yourdomain.com")
+        self.smtp_server = os.getenv("SMTP_SERVER", "smtp.mailtrap.io")
+        self.smtp_port = int(os.getenv("SMTP_PORT", 2525))
+        self.username = os.getenv("SMTP_USERNAME")
+        self.password = os.getenv("SMTP_PASSWORD")
+        self.sender = os.getenv("SMTP_SENDER", "no-reply@yourdomain.com")
 
     def send_email(self, to_email: str, subject: str, body: str, html_body: str | None = None):
         msg = EmailMessage()
@@ -36,7 +36,7 @@ class MailtrapSmtpProvider:
 
 class SmtpFactory:
     @staticmethod
-    def init_smtp_provider(provider_name: str = get_config("SMTP_PROVIDER", "mailtrap")):
+    def init_smtp_provider(provider_name: str = os.getenv("SMTP_PROVIDER", "mailtrap")):
         if provider_name == "mailtrap":
             return MailtrapSmtpProvider()
         else:

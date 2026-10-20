@@ -1,7 +1,6 @@
 from agentic_customer_care.rag.evaluation.eval_dataset import EVAL_DATASET
 from agentic_customer_care.rag.evaluation.eval_dataset_25 import EVAL_DATASET_25
 from agentic_customer_care.rag.retrival import HybridRetriever
-from utils.config import get_config
 import os
 import sys
 import time
@@ -34,11 +33,11 @@ class RagasEvaluator():
         self.dataset = EVAL_DATASET_25
                  
         self.model = init_chat_model(
-            model=get_config("EXTRACTOR_LLM_MODEL","openai/gpt-oss-120b"),
-            model_provider=get_config("EXTRACTOR_LLM_PROVIDER","openai"),
+            model=os.getenv("EXTRACTOR_LLM_MODEL","openai/gpt-oss-120b"),
+            model_provider=os.getenv("EXTRACTOR_LLM_PROVIDER","openai"),
             temperature=0, 
-            api_key=get_config("OPENAI_API_KEY"),
-            base_url=get_config("OPENAI_API_BASE") or None
+            api_key=os.getenv("OPENAI_API_KEY"),
+            base_url=os.getenv("OPENAI_API_BASE") or None
         )
         
     def extract_results(self, top_k, semantic_ratio):
@@ -161,7 +160,7 @@ def evaluate_rag():
     print(f"    ------------------ Evaluation ended -----------------")
     
     print("\n   Models specifications:")
-    print(f"     - Extractor model -> {get_config("EXTRACTOR_LLM_MODEL","openai/gpt-oss-20b")}")
+    print(f"     - Extractor model -> {os.getenv("EXTRACTOR_LLM_MODEL","openai/gpt-oss-20b")}")
     print("\n   Retrival parameters:")
     print(f"     - top_k -> {top_k}")
     print(f"     - semantic_ratio -> {semantic_ratio}")

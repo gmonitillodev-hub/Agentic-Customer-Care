@@ -3,7 +3,6 @@ from pathlib import Path
 
 from agentic_customer_care.providers.embedding_model_provider.embedding_provider import EmbeddingProviderFactory
 from utils import get_project_root
-from utils.config import get_config
 
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
@@ -131,7 +130,7 @@ def create_vectorstore_from_chunks(chunks: list[Document]):
 
     """
     
-    PROVIDER_TYPE = get_config("EMBEDDING_PROVIDER", "huggingface")  # set in .env
+    PROVIDER_TYPE = os.getenv("EMBEDDING_PROVIDER", "huggingface")  # set in .env
     
     print(f"\n    Creating vectorstore from {len(chunks)} chunks using {PROVIDER_TYPE} embeddings... \n")
     
