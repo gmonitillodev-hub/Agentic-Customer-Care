@@ -42,7 +42,7 @@ def get_order_status(order_id: str) -> str:
     Get the status of an order from the Order Management System (OMS).
 
     Args:
-        order_id (str): The unique identifier of the order.
+        order_id (str): The unique identifier of the order that must have the following format `ORD-XXX`.
     
     Returns:
         str: The status of the order.
@@ -71,7 +71,7 @@ def get_order_details(order_id: str) -> dict:
     Get the details of an order from the Order Management System (OMS).
 
     Args:
-        order_id (str): The unique identifier of the order.
+        order_id (str): The unique identifier of the order that must have the following format `ORD-XXX`..
 
     Returns:
         dict: A dictionary containing the details of the order.

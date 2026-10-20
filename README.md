@@ -2,114 +2,148 @@
 
 **AI-powered customer care agent for GreenThumb Marketplace — faster answers, happier gardeners.**
 
----
+## Overview
 
-## Project Overview
+GreenThumb Marketplace sells gardening supplies (seeds, bulbs, tools, pots, soil, fertilizers). The customer care team handles many heterogeneous requests — product questions, order tracking, seasonal advice, returns and refunds — with large volume spikes in spring and autumn.
 
-GreenThumb Marketplace is an e-commerce platform specialized in gardening supplies: seeds, bulbs, tools, pots, soil, and fertilizers. The customer care team handles hundreds of heterogeneous daily requests — product inquiries, order tracking, seasonal agronomic advice, returns and refunds. With a small team and significant volume spikes during spring and autumn, response times become unacceptable.
-
-This project introduces an AI-powered agent that autonomously handles first-level customer requests and intelligently escalates to a human operator when needed. The agent uses a **ReAct reasoning loop** to decide which tool to invoke at each step, ensuring transparent and traceable decision-making throughout every interaction.
+This project is an AI agent that autonomously handles first-level requests and escalates to a human operator when needed. It uses a **ReAct reasoning loop** to choose a tool at each step, keeping every decision traceable.
 
 ## Key Features
 
-- **Conversational AI agent with autonomous reasoning** (ReAct loop)
-- **Product catalog search** powered by RAG over a vector store
-- **Real-time order status lookup**
-- **Intelligent escalation** to human operators
-- **Structured JSON output** with answer, confidence score, sources, and escalation flag
-- **Short-term conversation memory** (trimming/summarization)
-- **Long-term semantic memory** (RAG) over company knowledge base
+- Conversational agent with autonomous reasoning (ReAct)
+- Knowledge-base search via RAG (semantic + BM25) over a Chroma vector store
+- Real-time order status and details lookup
+- Escalation to human operators via email
+- Short-term (trimming) and long-term (RAG) memory
+- FastAPI gateway with cookie-based sessions
+- RAGAS-based evaluation
 
-## Architecture (High-Level)
+## Architecture
 
-The system follows a straightforward conversational flow. The user sends a message, and the agent enters a reasoning loop where it analyzes the request and selects the most appropriate tool — catalog search, order lookup, or human escalation. Once the selected tool is executed and its output is collected, the agent formulates a structured response that includes the answer, a confidence score, source references, and an escalation flag if needed. This loop may iterate multiple times for complex queries that require information from more than one source before a final response is delivered to the user.
+The user sends a message and the agent enters a reasoning loop: it analyzes the request, picks a tool (knowledge-base search, order lookup, human escalation, context), reads the result and iterates if more information is needed before answering.
 
-> 📐 For detailed architecture diagrams and component descriptions, see [Architecture Documentation](docs/architecture.md)
-
-## Tools
-
-### Catalog Search
-
-Searches the company knowledge base — including product sheets, growing guides, and return policies — using semantic retrieval. Returns relevant passages to ground the agent's answer in verified, up-to-date company information.
-
-### Order Status
-
-Looks up order information (status, shipping, estimated delivery) from the orders database. Allows customers to check their order in real time without waiting for a human operator.
-
-### Human Escalation
-
-Transfers the conversation to a human operator when the agent's confidence is low, the request is out of scope, or the customer explicitly asks for human support. Ensures that complex or sensitive issues always receive appropriate attention.
-
-## Memory Strategy
-
-**Short-Term Memory**: The agent maintains conversation context within a session using an explicit strategy (trimming or summarization) to stay within token limits while preserving relevant context. This ensures that multi-turn conversations remain coherent without degrading performance as the dialogue grows longer.
-
-**Long-Term Memory**: A semantic memory layer (RAG) over the company knowledge base allows the agent to retrieve product information, policies, and agronomic guides across sessions. This means the agent always has access to the latest company knowledge, regardless of whether the information appeared in the current conversation.
-
-## Evaluation
-
-The agent is evaluated on a dedicated test dataset using established LLM evaluation frameworks (RAGAS and DeepEval) to measure retrieval quality, answer faithfulness, and overall response accuracy. This ensures that the agent's performance is quantifiable, reproducible, and continuously monitored against defined quality benchmarks.
-
-> 📊 For evaluation methodology, metrics, and results, see [Evaluation Documentation](docs/evaluation.md)
+Tools, memory and session entities are described in [Architecture](docs/architecture.md).
 
 ## Getting Started
 
 ### Prerequisites
 
-- `<TBD>`
+- Python `>=3.13,<4.0`
+- [Poetry](https://python-poetry.org/) `>=2`
+- An OpenAI-compatible LLM endpoint and API key
+- (Optional) An SMTP account, e.g. Mailtrap, for human escalation emails
 
 ### Installation
 
 ```bash
-# <TBD>
+git clone <repo-url>
+cd Agentic-Customer-Care
+poetry install
 ```
 
 ### Environment Setup
 
-Create a `.env` file in the project root:
-
-```env
-# <TBD>
+```bash
+cp .env.example .env
 ```
+
+Then edit `.env`:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `OPENAI_API_KEY` | — | API key for the LLM (and embeddings if `EMBEDDING_PROVIDER=openai`). **Required.** |
+| `OPENAI_API_BASE` | official OpenAI | Base URL of an OpenAI-compatible endpoint. |
+| `LLM_PROVIDER` | `openai` | Provider of the main agent model. |
+| `LLM_MODEL` | `openai/gpt-oss-20b` | Main agent model. |
+| `EXTRACTOR_LLM_PROVIDER` | `openai` | Provider of the entity-extractor / evaluation model. |
+| `EXTRACTOR_LLM_MODEL` | `openai/gpt-oss-20b` | Entity-extractor / evaluation model. |
+| `EMBEDDING_PROVIDER` | `huggingface` | `huggingface` or `openai`. |
+| `EMBEDDING_MODEL_NAME` | provider default | Embedding model name. |
+| `SMTP_PROVIDER` | `mailtrap` | Email provider for escalations. |
+| `SMTP_SERVER` / `SMTP_PORT` | `smtp.mailtrap.io` / `2525` | SMTP host and port. |
+| `SMTP_USERNAME` / `SMTP_PASSWORD` | — | SMTP credentials. |
+| `SMTP_SENDER` | `no-reply@yourdomain.com` | Sender address. |
+| `AGENT_GATEWAY_HOST` / `AGENT_GATEWAY_PORT` | `127.0.0.1` / `8100` | API gateway bind address. |
+| `AGENT_VERBOSE` | `false` | Print agent steps to stdout. |
+
+### Commands
+
+Scripts are defined in `pyproject.toml` and run with `poetry run`:
+
+| Command | Description |
+|---------|-------------|
+| `poetry run ingest` | Chunk and index `knowledge_base/documents` into the vector store. |
+| `poetry run run_agent_gateway` | Start the FastAPI gateway (default `http://127.0.0.1:8100`). |
+| `poetry run test_retrival` | Smoke-test retrieval from the vector store. |
+| `poetry run test_extractor` | Smoke-test the entity extractor. |
+| `poetry run evaluate_rag` | Evaluate retrieval with RAGAS. Prompts for `top_k` and `semantic_ratio` (0–1, 1 = fully semantic), then prints the metrics. Uses the `EXTRACTOR_LLM_*` model. |
 
 ### Run
 
 ```bash
-# <TBD>
+poetry run ingest               # first time only
+poetry run run_agent_gateway
 ```
+
+Try it:
+
+```bash
+curl -c cookies.txt -b cookies.txt -X POST http://127.0.0.1:8100/inference \
+  -H "Content-Type: application/json" \
+  -d '{"message": "What is the status of order ORD-001?"}'
+```
+
+The `sessionId` cookie keeps the conversation going across requests.
+
+### API Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/health` | Health check. |
+| `GET` | `/system_info` | Service information. |
+| `POST` | `/inference` | Send `{"message": "..."}`; returns the agent response and sets `sessionId` cookie. |
+| `GET` | `/session/{session_id}/data` | Export entities collected for a session. |
+
+Interactive docs are available at `/docs`.
 
 ## Project Structure
 
 ```
-greenthumb-agent/
-├── app/
-│   ├── agent/
-│   ├── tools/
-│   ├── memory/
-│   └── api/
-├── data/
-│   ├── knowledge_base/
-│   └── orders.json
+.
+├── src/
+│   ├── agentic_customer_care/
+│   │   ├── agent/          # workflow, tools, middlewares, entity extractor, sessions
+│   │   ├── api_gateway/    # FastAPI app
+│   │   ├── providers/      # embeddings, SMTP
+│   │   └── rag/            # ingestion, retrieval, evaluation
+│   └── utils/              # constants, logger, helpers
+├── knowledge_base/         # documents, orders, products, ingestion chunks, vector store
 ├── docs/
-│   ├── architecture.md
-│   └── evaluation.md
 ├── tests/
 ├── .env.example
-├── requirements.txt
-└── README.md
+└── pyproject.toml
 ```
 
 ## Data & Mock Assets
 
-Since production data cannot be shared, the project includes **fictional but realistic mock data** designed to simulate real-world customer care scenarios:
+Production data cannot be shared, so the project ships **fictional but realistic mock data**:
 
-- **Knowledge Base** — 30+ documents including product sheets, seasonal growing guides, and return/refund policies.
-- **Orders** — An `orders.json` file with 20+ mock orders covering various statuses (processing, shipped, delivered, returned).
+- **Knowledge base** — 30+ documents: growing guides, FAQ, policies, known platform errors.
+- **Orders** — `knowledge_base/orders/orders_v1.json`, mock orders across several statuses.
+- **Products** — `knowledge_base/products/catalog_v1.json`.
 
-These assets are sufficient to demonstrate the full capabilities of the agent and to run the evaluation pipeline end to end.
+## Evaluation
+
+The agent is evaluated on a dedicated dataset (`src/agentic_customer_care/rag/evaluation/`) with RAGAS to measure retrieval quality and answer faithfulness. Run it with `poetry run evaluate_rag`.
+
+> 📊 Methodology, dataset and results: [Evaluation](docs/evaluation.md)
+
+## Open Points
+
+- **User data management and GDPR compliance.** As a POC, orders and products are read from the knowledge base, and the order tools have direct access to them. In production this would let users retrieve data through the agent, so authentication and authorization must be improved to return only the data each user is entitled to.
 
 ## Documentation
 
-- [Architecture Documentation](docs/architecture.md) — System design, component diagrams, data flow
-- [Design Decisions](docs/decisions.md) — Log of technical decisions and their rationale
-- [Evaluation Documentation](docs/evaluation.md) — Test dataset, metrics, benchmark results
+- [Architecture](docs/architecture.md) — flow, tools, memory and session entities
+- [Evaluation](docs/evaluation.md) — evaluator, test dataset, test runs
+- [Design Decisions](docs/decisions.md) — technical decisions and rationale

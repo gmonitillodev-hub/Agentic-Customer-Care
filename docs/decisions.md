@@ -1,89 +1,59 @@
 # Design Decisions
 
-Log of technical decisions. Newest entries at the bottom.
+Log of technical decisions and why they were taken. Newest entries at the bottom. Implementation details are in [architecture.md](architecture.md).
 
-## D-001 — Session entities: storage and injection into the agent
+## D-001 — Session entities: dedicated memory injected via dynamic prompt
 
-**Context.** The `EntityExtractorAgent` extracts user data (name, surname, email, address) from the conversation. The main agent must know these values on every turn, without re-asking the user.
+**Need.** The main agent must know user data (name, surname, email, address) on every turn without re-asking.
 
-### Storage: `dict[str, SessionEntity]`
+**Decision.** Keep entities in a typed `SessionEntity` per session, filled by a background extractor and injected into the system prompt through `context_schema` + `@dynamic_prompt`.
 
-- `CustomerCareAgent.session_data: dict[str, SessionEntity]`, keyed by `sessionId`.
-- O(1) lookup, and it replaces the separate `active_sessions: list[str]` (a session exists if its key exists).
-- `_check_session` returns the given id if known, otherwise generates a new uuid and creates an empty `SessionEntity`.
-- `SessionEntity.sessionId` is typed `str` (it was wrongly typed with the `uuid` module).
+**Why.** It fits this use case: relevant information is saved once and reused to solve problems without asking the user again, even after old messages are trimmed.
 
-### Update: `SessionEntity.merge_data` + background extraction
+**Technical choices**
 
-- The extraction runs in an `@after_agent` middleware (`build_entities_updater`), **after** the main agent finished.
-- The hook is `async` and does **not** await the extraction: it schedules it with `asyncio.create_task` and returns, so `ainvoke()` completes and the answer is returned without waiting for the extractor.
-- Inside the task, `await asyncio.to_thread(extractor.invoke, state)` runs the sync, blocking extractor in a worker thread, keeping the event loop free. No `ainvoke` is needed on the extractor.
-- The `structured_response` of the extractor is deep-merged into `SessionEntity.data` (`merge_data`).
-- Nested models (`UserInfo`, `AddressInfo`) are merged recursively.
-- A `None` value never overwrites an existing one, so data accumulates across turns.
-- `interact` is `async` and uses `agent.ainvoke`. Returning session data to the user is not a requirement; the returned `session_data.data` is only informational and may not yet include the current turn.
-- Calling a coroutine without `await` does not run it; `create_task` is what schedules it without waiting.
+- Extracting in the background after the answer keeps latency unaffected.
+- A schema-driven store is deterministic and bounded in size; exact values are never rewritten by an LLM.
+- Per-invoke context is not saved in the checkpoint: the prompt is rebuilt each call, so it never accumulates, never goes stale and is not affected by trimming.
+- A single source of truth (`session_data`) avoids duplicating entities in the checkpoint.
 
-### Injection: `context_schema` + `@dynamic_prompt` middleware
+**Alternatives rejected**
 
-- `create_agent(..., context_schema=SessionEntity, middleware=[prompt_middleware, entities_updater])`.
-- `interact` calls `agent.ainvoke(..., context=session_data)`; the same `SessionEntity` object is mutated by the background task.
-- The `entities_prompt` middleware (`build_prompt_enrichment`) reads `request.runtime.context` and returns the **full** system prompt: `CC_AGENT_SYSTEM_PROMPT` + known user data.
-- `system_prompt=` was removed from `create_agent`: a `dynamic_prompt` replaces it, so the base prompt lives in the middleware.
-- With no context, only the base prompt is returned.
-
-**Why this and not the alternatives**
-
-| Option | Outcome |
+| Option | Why not |
 |---|---|
-| `context_schema` + `dynamic_prompt` | **Chosen.** Context is per-invoke, never saved in the checkpoint; the system prompt is rebuilt on every model call, so it never accumulates and is not affected by message trimming. |
-| System message in the `messages` input | Rejected. It becomes a regular message, is persisted in the checkpoint, accumulates each turn and can go stale. |
-| `state_schema` | Rejected. Persists entities in the checkpoint, duplicating `session_data` as source of truth. |
-| Tool using `ToolRuntime` | Rejected as the main mechanism. The model decides whether to call it, so it is unreliable. Context stays available to tools via `runtime.context` anyway. |
-| `store` | Rejected. Only useful for sharing data across threads/sessions. |
+| System message in `messages` | Persisted in the checkpoint, accumulates each turn, can go stale. |
+| `state_schema` | Duplicates `session_data` as source of truth. |
+| Tool with `ToolRuntime` | The model decides whether to call it, so it is unreliable. |
+| `store` | Only useful to share data across threads/sessions. |
 
-**Consequences**
-
-- `self.session_data` is the single source of truth for entities; the checkpointer holds only `messages`.
-- One-turn lag: entities are extracted *after* the answer, in the background, so turn N sees data up to turn N-1 (or N-2 if the next message arrives before the extraction ends).
-- Errors in the background task are not propagated to the caller; an unhandled exception only surfaces as a "Task exception was never retrieved" warning.
-- The task is not strongly referenced, so in theory the event loop could garbage-collect it; accepted for simplicity.
-- Async-only hook: the agent must be run with `ainvoke`; `invoke` would fail because no sync hook exists.
-- Entities are sent to the LLM in the prompt (privacy consideration, same as the extractor).
-- `_trim_messages` only trims `messages`, so entities are never lost when history is trimmed.
-
-### Known design trade-offs (entity extraction)
-
-- **Trimming can be more aggressive.** Key user data lives in `SessionEntity` (not in the message history), so `max_memory_token` can be lowered. Keeping too much text in the context pushes the model to lose focus, and the problem grows with very long chats.
-- **Entity memory must stay small.** Everything in `SessionEntity` is injected in every system prompt, so unbounded growth would inflate the context again. Prompting strategies for the extractor (extract only relevant, stable fields; no free text) are to be evaluated to limit what is stored.
-
-### Entity memory management (storage of relevant info)
-
-The entity memory is the deterministic store for the relevant information of a session. It replaces summarization (see D-002): exact values are kept as structured fields instead of being rewritten by an LLM.
-
-- **Schema-driven.** Only fields declared in `SessionEntityData` (and nested models such as `UserInfo`, `AddressInfo`) can be stored. Adding a new kind of relevant info (e.g. an order id) means adding a typed field, not storing free text.
-- **Scope.** One `SessionEntity` per `sessionId`, held in `CustomerCareAgent.session_data`. It lives in process memory: it is lost on restart and not shared across instances. Persistence (DB/Redis) is not covered yet.
-- **Write path.** Only the background extractor writes, via `merge_data`, after each answer. The main agent never writes entities directly.
-- **Merge policy.** Field by field, recursive on nested models. A new non-`None` value overwrites the old one; `None` never erases an existing value.
-- **Read path.** Every model call receives the current entities in the system prompt (`entities_prompt`), so they are never affected by trimming.
-- **Limits by design.** Bounded size comes from the schema (typed, finite fields) and from the extractor prompt (extract only stable, relevant data). Open points to evaluate:
-  - how to correct a wrong value: today the latest extraction wins, so a mistaken extraction overwrites a correct value;
-  - how to explicitly delete or invalidate a value when the user retracts it, since `None` is ignored;
-  - which entities are relevant for the use case (order ids, issue references, contact data) and their validation (formats, e.g. order id pattern);
-  - persistence and expiry of the entity memory per session.
+**Accepted trade-offs.** One-turn lag in entity availability; async-only; background errors not propagated; entities are sent to the LLM. Open points (corrections, validation, persistence) are listed in the architecture doc.
 
 ## D-002 — Short-term memory: trimming, not summarization
 
-**Decision.** Keep trimming (`_trim_messages`) as the short-term memory strategy; do not introduce summarization.
+**Decision.** Keep trimming as the short-term memory strategy; do not introduce summarization.
 
-**Why summarization does not make sense here**
+**Why.** The agent works in an AMS-like context: little text, few but critical values (ids, names, emails).
 
-The agent operates in a context close to AMS (application management support): little text, few but highly relevant pieces of information, aimed at creating and solving very specific issues. This implies that:
+1. Contexts are usually small, so compression gains little.
+2. Summarization is non-deterministic and may alter data (e.g. a wrong digit in an order id) and mislead the conversation.
 
-1. In most use cases the context is not large, so there is little to gain from compressing it.
-2. Summarization introduces non-determinism in how the context is built. A summary may report untrue or slightly different data, e.g. a wrong digit in an order id, and mislead the rest of the conversation.
+Dropping the oldest messages keeps exact values verbatim, and key user data is preserved anyway by the entity memory.
 
-**Consequences**
+## D-003 — Long-term memory: deterministic RAG over a topic-organized KB
 
-- Exact values (ids, names, emails) are preserved verbatim in the message history, or in the entity memory.
-- When history exceeds the token limit, the oldest messages are dropped rather than rewritten.
+**Decision.** Long-term memory is a RAG over the knowledge base, organized by topic, using recursive chunking and a hybrid (semantic + BM25) retriever, with no LLM involved in retrieval.
+
+**Why.** The agent must ground answers in verified company information, and the retrieved data must be predictable and reproducible.
+
+**Knowledge base by topic.** Documents are kept in one folder per topic, stored as `topic` metadata on every chunk:
+
+- `faq`
+- `garden_info`
+- `platform_errors`
+- `policies`
+
+**Chunking strategy.** `RecursiveCharacterTextSplitter`, chunks of 1000 characters with 200 overlap, splitting on paragraphs, then lines, then words. Documents are short and self-contained, so this keeps paragraphs together where possible, and the overlap avoids losing context at chunk boundaries. Markdown is converted to plain text first, so formatting noise doesn't enter the embeddings.
+
+**No reranking or LLM augmentation.** Query rewriting, LLM reranking and similar techniques are intentionally not used: they would introduce non-deterministic behavior in KB retrieval, as in D-002. The same query always returns the same chunks, which makes retrieval easy to test and evaluate.
+
+**Hybrid retrieval (semantic + BM25).** The KB contains platform errors (codes, exact messages), where semantic search alone can miss exact matches. An ensemble retriever combines BM25 (keyword) with vector search (meaning), weighted 40/60 by default, so both kinds of query work. Both approaches are deterministic.
