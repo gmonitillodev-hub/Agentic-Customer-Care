@@ -183,7 +183,6 @@ def run_ingestion_pipeline():
     documents = preprocess_documents(extracted_documents)
     
     chunks = chunk_documents(documents)    
-    print("🚀 ~ run_ingestion_pipeline ~ chunks:", chunks)
     create_vectorstore_from_chunks(chunks)
     
     print("\n   Ingestion pipeline completed successfully.")

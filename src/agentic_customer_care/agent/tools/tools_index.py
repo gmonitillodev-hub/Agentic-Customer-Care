@@ -1,8 +1,10 @@
+from langchain_core.tools import BaseTool
+
 from agentic_customer_care.agent.tools.oms import get_order_details, get_order_status
 from agentic_customer_care.agent.tools.rag import retrieve_documents_from_rag
 from agentic_customer_care.agent.tools.request_handler import escalate_request_to_human, get_current_context
 
-def get_all_tools() -> list[function]:
+def get_all_tools() -> list[BaseTool]:
     """
     Get a list of all available tools.
 
