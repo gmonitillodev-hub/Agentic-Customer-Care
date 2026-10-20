@@ -6,7 +6,7 @@ authors = [
     {name = "Giuseppe Monitillo", email = "Giuseppe.Monitillo@ext.luxottica.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.14,<4.0.0"  # <--- Modificata questa riga
+requires-python = ">=3.13,<4.0.0"
 dependencies = [
     "langchain-core (>=1.6.9,<2.0.0)",
     "langchain (>=1.4.4,<2.0.0)",
