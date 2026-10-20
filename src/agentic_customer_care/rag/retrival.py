@@ -8,6 +8,9 @@ from langchain_classic.retrievers import EnsembleRetriever
 import json
 import threading
 from langchain_core.documents import Document
+from utils.logger import setup_logger
+
+logger = setup_logger("rag")
 
 
 class HybridRetriever:
@@ -34,6 +37,7 @@ class HybridRetriever:
         with self._lock:
             if self._initialized:
                 return
+            logger.info("Initializing HybridRetriever (loading embeddings, vectorstore, chunks)")
             embedding_provider = EmbeddingProviderFactory.get_embedding_provider()
             self._vectorstore = Chroma(
                 persist_directory=str(get_project_root() / "knowledge_base" / "vectorstore"),
@@ -46,22 +50,27 @@ class HybridRetriever:
                     d = json.loads(line)
                     self._chunks.append(Document(page_content=d["page_content"], metadata=d["metadata"]))
             self._initialized = True
+            logger.info(f"HybridRetriever initialized - {len(self._chunks)} chunks loaded")
             
             
 
     def retrieve(self, query: str, top_k: int = 5, semantic_ratio: float = 0.6) -> list[Document]:
         
         if not (0.0 <= semantic_ratio <= 1.0):
+            logger.error(f"Invalid semantic_ratio: {semantic_ratio}")
             raise ValueError("Il parametro semantic_ratio deve essere compreso tra 0 e 1")
     
     # Calcolo automatico del peso per il BM25
         bm25_weight = 1.0 - semantic_ratio
+        logger.debug(f"Retrieve - query: {query} | top_k: {top_k} | semantic_ratio: {semantic_ratio}")
         bm25 = BM25Retriever.from_documents(self._chunks, k=top_k)
         semantic = self._vectorstore.as_retriever(search_kwargs={"k": top_k})
         # Hybrid — 40% BM25, 60% vector
         hybrid = EnsembleRetriever(retrievers=[bm25, semantic], weights=[bm25_weight, semantic_ratio])
         
-        return hybrid.invoke(query)[:top_k]
+        results = hybrid.invoke(query)[:top_k]
+        logger.info(f"Retrieved {len(results)} documents for query: {query}")
+        return results
 
 
 

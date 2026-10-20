@@ -7,6 +7,9 @@ from langchain_core.tools import tool
 import requests
 from agentic_customer_care.providers.smtp.smtp_factory import SmtpFactory
 from utils.constants import ESCALATION_EMAIL_TEMPLATE
+from utils.logger import setup_logger
+
+logger = setup_logger("tools")
 
 @tool
 def escalate_request_to_human(message: str) -> str:
@@ -25,6 +28,9 @@ def escalate_request_to_human(message: str) -> str:
         error (str): Error message if the escalation failed, None otherwise.
     """
     
+    logger.info("Tool escalate_request_to_human called")
+    logger.debug(f"Escalation message: {message}")
+    
     try:
     
         smtp_server = SmtpFactory.init_smtp_provider()
@@ -36,9 +42,10 @@ def escalate_request_to_human(message: str) -> str:
         )
         
     except Exception as e:
-        print(f"Failed to escalate request: {e}")
+        logger.error(f"Failed to escalate request: {e}")
         return {"is_success": False, "error": str(e)}
 
+    logger.info("Request escalated to human agent")
     return {"is_success": True}
 
 class Location(BaseModel):
@@ -63,6 +70,7 @@ def get_current_context() -> CurrentContext:
         date_time (Date): The date and time of the current context
     """
     
+    logger.info("Tool get_current_context called")
     current_date_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
     try:
@@ -76,7 +84,7 @@ def get_current_context() -> CurrentContext:
         )
     
     except Exception as e:
-        print(f"Failed to retrieve current context: {e}")
+        logger.error(f"Failed to retrieve current context: {e}")
         location = "Unknown"
 
     return CurrentContext(

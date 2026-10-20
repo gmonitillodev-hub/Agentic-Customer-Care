@@ -12,7 +12,7 @@ from langchain_core.messages import HumanMessage,  AIMessage, ToolMessage
 
 
 from utils.constants import CC_AGENT_EXTRACTOR_PROMPT
-from utils.logger import setup_agent_logger
+from utils.logger import setup_logger
 
 load_dotenv()
 
@@ -25,7 +25,7 @@ class EntityExtractorAgent:
         
         self.agent = None
         
-        self.logger = setup_agent_logger(True)
+        self.logger = setup_logger("agent", True)
             
         self.init_agent() # Start the initialization
 

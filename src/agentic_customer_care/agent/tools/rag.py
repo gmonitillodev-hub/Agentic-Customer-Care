@@ -1,6 +1,9 @@
 from agentic_customer_care.rag.retrival import HybridRetriever
 from langchain_core.documents import Document
 from langchain_core.tools import tool 
+from utils.logger import setup_logger
+
+logger = setup_logger("tools")
 
 @tool
 def retrieve_documents_from_rag(query: str) -> list[Document]:
@@ -23,6 +26,10 @@ def retrieve_documents_from_rag(query: str) -> list[Document]:
     query = query.replace("\n", " ")
     
     if not query:
+        logger.error("retrieve_documents_from_rag: empty query")
         raise ValueError("Query cannot be empty or whitespace.")
     
-    return HybridRetriever().retrieve(query, top_k=5)
+    logger.info(f"Tool retrieve_documents_from_rag called - query: {query}")
+    docs = HybridRetriever().retrieve(query, top_k=5)
+    logger.debug(f"Retrieved {len(docs)} documents: {[d.metadata.get('source') for d in docs]}")
+    return docs

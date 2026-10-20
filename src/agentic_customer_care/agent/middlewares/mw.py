@@ -3,6 +3,9 @@ from agentic_customer_care.agent.entity_extractor import EntityExtractorAgent
 from langchain.agents.middleware import AgentMiddleware, AgentState, ModelRequest, after_agent, dynamic_prompt
 import asyncio
 from langgraph.runtime import Runtime
+from utils.logger import setup_logger
+
+logger = setup_logger("agent")
 
 
 def build_prompt_enrichment(system_prompt: str):
@@ -30,9 +33,14 @@ def build_entities_updater(extractor: EntityExtractorAgent) -> AgentMiddleware:
         async def _extract() -> None:
             # extractor.invoke is sync and blocking: to_thread runs it in a worker thread so the
             # event loop stays free; the await only suspends this task, not the loop.
-            extracted = await asyncio.to_thread(extractor.invoke, state)
-            if extracted:
-                runtime.context.merge_data(extracted)
+            # the task is not awaited, so exceptions would otherwise be silently lost
+            try:
+                extracted = await asyncio.to_thread(extractor.invoke, state)
+                if extracted:
+                    runtime.context.merge_data(extracted)
+                    logger.debug(f"Session entities updated -> {extracted}")
+            except Exception as e:
+                logger.error(f"Background entity extraction failed: {e}")
     
         asyncio.create_task(_extract())
     return update_entities

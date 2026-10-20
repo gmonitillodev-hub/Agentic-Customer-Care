@@ -21,7 +21,7 @@ from langchain_core.messages.utils import count_tokens_approximately
 
 from utils.constants import CC_AGENT_SYSTEM_PROMPT, MAX_MEMORY_TOKEN
 from utils.functions import _merge_models
-from utils.logger import setup_agent_logger
+from utils.logger import setup_logger
 
 load_dotenv()
 
@@ -32,7 +32,7 @@ class CustomerCareAgent:
         
         self.tools = get_all_tools() # Get all fuction / tools typed as StructuredTool that will be passed to the model
 
-        self.logger = setup_agent_logger(True)
+        self.logger = setup_logger("agent", True)
         self.agent = None
         
         self.session_data: dict[str, SessionEntity] = {} 

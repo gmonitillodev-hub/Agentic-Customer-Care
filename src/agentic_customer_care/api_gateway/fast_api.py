@@ -4,6 +4,9 @@ import os
 import uvicorn
 
 from pydantic import BaseModel
+from utils.logger import setup_logger
+
+logger = setup_logger("agent")
 
 class InferenceRequest(BaseModel):
     message: str
@@ -48,6 +51,7 @@ async def chat_inference(
                 
         error_message = getattr(e, "message", None) or str(e)
         status_code = getattr(e, "status_code", 500)
+        logger.error(f"Inference failed (sessionId: {sessionId}, status: {status_code}): {error_message}")
         raise HTTPException(status_code=status_code, detail=f"Sorry, something went wrong. - Details: {error_message}")
         
     
@@ -58,6 +62,7 @@ def get_session_data(session_id: str):
         return cc_agent.export_session_data(sessionId=session_id)
     
     except Exception as e:
+        logger.error(f"Failed to export session data (session_id: {session_id}): {e}")
         return e
 
 
@@ -77,5 +82,5 @@ def init_gateway():
         )
         
     except Exception as e:
-        
+        logger.error(f"Error initializing Agent gateway: {e}")
         print(f"    Error initialing Agent gateway - Details: {e}")

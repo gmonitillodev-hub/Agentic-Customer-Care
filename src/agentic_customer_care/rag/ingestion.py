@@ -12,6 +12,9 @@ import json
 from bs4 import BeautifulSoup
 
 import re
+from utils.logger import setup_logger
+
+logger = setup_logger("rag")
 
 def extract_documents_from_kb() -> list[Document]:
     """
@@ -32,6 +35,7 @@ def extract_documents_from_kb() -> list[Document]:
     documents = []
     
     if not kd_folder.exists() or not kd_folder.is_dir():
+        logger.error(f"Knowledge base folder not found: {kd_folder}")
         raise FileNotFoundError(f"Knowledge base folder not found: {kd_folder}")
     
     for topic_folder in kd_folder.iterdir():
@@ -53,6 +57,7 @@ def extract_documents_from_kb() -> list[Document]:
                             )
     
     print(f"    Number of documents extracted from knowledge base: {len(documents)}")
+    logger.info(f"Extracted {len(documents)} documents from {kd_folder}")
     
     return documents
      
@@ -118,6 +123,7 @@ def chunk_documents(documents: list[Document]) -> list[Document]:
             f.write(json.dumps(d, ensure_ascii=False) + "\n")
     
     print(f"    Number of chunks created: {len(chunks)}")
+    logger.info(f"Created {len(chunks)} chunks from {len(documents)} documents, saved to {output_path}")
     return chunks
     
 def create_vectorstore_from_chunks(chunks: list[Document]):
@@ -158,9 +164,11 @@ def create_vectorstore_from_chunks(chunks: list[Document]):
             raise ValueError("No vectors were indexed. Please check the input documents and embeddings.")
         
         print(f"\n  Vectorstore created and persisted with {indexed_vector_number} vectors.")
+        logger.info(f"Vectorstore created with {indexed_vector_number} vectors ({PROVIDER_TYPE} embeddings)")
         
     except Exception as e:
         print(f"Error creating vectorstore: {e}")
+        logger.error(f"Error creating vectorstore: {e}")
         raise e
     
 def run_ingestion_pipeline():
@@ -178,6 +186,7 @@ def run_ingestion_pipeline():
     print("\n---------------------------------------------------------------")
     print("------------------------ Ingestion Pipeline ------------------- \n")
     print(" \n  Running ingestion pipeline...")
+    logger.info("Ingestion pipeline started")
     
     extracted_documents = extract_documents_from_kb()
     documents = preprocess_documents(extracted_documents)
@@ -186,6 +195,7 @@ def run_ingestion_pipeline():
     create_vectorstore_from_chunks(chunks)
     
     print("\n   Ingestion pipeline completed successfully.")
+    logger.info("Ingestion pipeline completed")
     print("---------------------------------------------------------------\n")
  
     
