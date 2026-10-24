@@ -36,7 +36,7 @@ class EntityExtractorAgent:
         """
         
         model = init_chat_model(
-            model=os.getenv("EXTRACTOR_LLM_MODEL","openai/gpt-oss-20b"),
+            model=os.getenv("EXTRACTOR_LLM_MODEL","openai/gpt-oss-120b"),
             model_provider=os.getenv("EXTRACTOR_LLM_PROVIDER","openai"),
             temperature=0, 
             api_key=os.getenv("OPENAI_API_KEY"),

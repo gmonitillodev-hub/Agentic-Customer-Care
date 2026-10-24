@@ -160,7 +160,7 @@ def evaluate_rag():
     print(f"    ------------------ Evaluation ended -----------------")
     
     print("\n   Models specifications:")
-    print(f"     - Extractor model -> {os.getenv("EXTRACTOR_LLM_MODEL","openai/gpt-oss-20b")}")
+    print(f"     - Extractor model -> {os.getenv("EXTRACTOR_LLM_MODEL","openai/gpt-oss-120b")}")
     print("\n   Retrival parameters:")
     print(f"     - top_k -> {top_k}")
     print(f"     - semantic_ratio -> {semantic_ratio}")

@@ -54,9 +54,9 @@ Then edit `.env`:
 | `OPENAI_API_KEY` | — | API key for the LLM (and embeddings if `EMBEDDING_PROVIDER=openai`). **Required.** |
 | `OPENAI_API_BASE` | official OpenAI | Base URL of an OpenAI-compatible endpoint. |
 | `LLM_PROVIDER` | `openai` | Provider of the main agent model. |
-| `LLM_MODEL` | `openai/gpt-oss-20b` | Main agent model. |
+| `LLM_MODEL` | `openai/gpt-oss-120b` | Main agent model. |
 | `EXTRACTOR_LLM_PROVIDER` | `openai` | Provider of the entity-extractor / evaluation model. |
-| `EXTRACTOR_LLM_MODEL` | `openai/gpt-oss-20b` | Entity-extractor / evaluation model. |
+| `EXTRACTOR_LLM_MODEL` | `openai/gpt-oss-120b` | Entity-extractor / evaluation model. |
 | `EMBEDDING_PROVIDER` | `huggingface` | `huggingface` or `openai`. |
 | `EMBEDDING_MODEL_NAME` | provider default | Embedding model name. |
 | `SMTP_PROVIDER` | `mailtrap` | Email provider for escalations. |

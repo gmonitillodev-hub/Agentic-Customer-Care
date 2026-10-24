@@ -20,6 +20,7 @@ class OrderData(BaseModel):
     request_status: str    
 
 class SessionEntityData(BaseModel):
+    """Entities extracted from the conversation. Return them by calling this tool: it is the only valid way to answer."""
     user_info: UserInfo | None = None
     order_data: dict[str, OrderData] | None = Field(description="Dict with orderId -> OrderData that keep track of already known info", default=None)
     
