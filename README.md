@@ -77,6 +77,7 @@ Scripts are defined in `pyproject.toml` and run with `poetry run`:
 | `poetry run test_retrival` | Smoke-test retrieval from the vector store. |
 | `poetry run test_extractor` | Smoke-test the entity extractor. |
 | `poetry run evaluate_rag` | Evaluate retrieval with RAGAS. Prompts for `top_k` and `semantic_ratio` (0–1, 1 = fully semantic), then prints the metrics. Uses the `EXTRACTOR_LLM_*` model. |
+| `poetry run evaluate_rag_deepeval` | Evaluate retrieval with DeepEval (contextual precision, contextual relevancy, GEval correctness). Same prompts as `evaluate_rag`; many judge calls, mind provider rate limits. |
 
 ### Run
 

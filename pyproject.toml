@@ -22,7 +22,8 @@ dependencies = [
     "fastapi (>=0.143.0,<0.144.0)",
     "uvicorn (>=0.54.0,<0.55.0)",
     "rank-bm25 (>=0.2.2,<0.3.0)",
-    "ragas (>=0.4.3,<0.5.0)"
+    "ragas (>=0.4.3,<0.5.0)",
+    "deepeval (>=4.3.1,<5.0.0)"
 ]
 
 [project.scripts]
@@ -33,6 +34,7 @@ run_agent_gateway = "agentic_customer_care.api_gateway.fast_api:init_gateway"
 
 test_extractor = "agentic_customer_care.agent.entity_extractor:test_enity_extractor"
 evaluate_rag = "agentic_customer_care.rag.evaluation.ragas_evauation:evaluate_rag"
+evaluate_rag_deepeval = "agentic_customer_care.rag.evaluation.deepeval_evaluation:evaluate_rag_deepeval"
 
 [tool.poetry]
 packages = [
